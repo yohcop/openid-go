@@ -1,0 +1,6 @@
+
+Basic implementation of OpenID consumer in go.
+
+Tested with Google and Yahoo open ID providers.
+
+
