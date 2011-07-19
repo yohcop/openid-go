@@ -39,7 +39,7 @@ func (e *DiscoveryError) String() string {
 }
 
 func DiscoverXml(id string) (*string, os.Error) {
-	resp, _, err := http.Get(id)
+	resp, err := http.Get(id)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func DiscoverXml(id string) (*string, os.Error) {
 }
 
 func DiscoverHtml(id string) (*string, os.Error) {
-	resp, _, err := http.Get(id)
+	resp, err := http.Get(id)
 	if err != nil {
 		return nil, err
 	}
@@ -138,10 +138,10 @@ func ValidateLogin(params map[string]string, expectedURL string, thisURL string)
 }
 
 func verifyAssertion(params map[string]string) bool {
-	fields := map[string]string{"openid.mode": "check_authentication"}
+	fields := map[string][]string{"openid.mode": []string{"check_authentication"}}
 	for k, v := range params {
 		if k != "openid.mode" {
-			fields[k] = v
+			fields[k] = []string{v}
 		}
 	}
 
