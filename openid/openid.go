@@ -44,7 +44,7 @@ func DiscoverXml(id string) (*string, error) {
 	}
 	defer resp.Body.Close()
 
-	parser := xml.NewParser(resp.Body)
+	parser := xml.NewDecoder(resp.Body)
 	inURI := false
 	for {
 		t, err := parser.Token()
