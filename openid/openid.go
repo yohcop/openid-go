@@ -2,7 +2,7 @@ package openid
 
 import (
 	"encoding/xml"
-	"html"
+	"exp/html"
 	"io/ioutil"
 	"log"
 	"net/http"
