@@ -1,13 +1,12 @@
 package openid
 
 import (
-	"http"
+	"encoding/xml"
 	"html"
-	"log"
-	"os"
-	"strings"
-	"xml"
 	"io/ioutil"
+	"log"
+	"net/http"
+	"strings"
 )
 
 func Normalize(id string) string {
@@ -34,11 +33,11 @@ type DiscoveryError struct {
 	str string
 }
 
-func (e *DiscoveryError) String() string {
+func (e *DiscoveryError) Error() string {
 	return e.str
 }
 
-func DiscoverXml(id string) (*string, os.Error) {
+func DiscoverXml(id string) (*string, error) {
 	resp, err := http.Get(id)
 	if err != nil {
 		return nil, err
@@ -67,7 +66,7 @@ func DiscoverXml(id string) (*string, os.Error) {
 	return nil, &DiscoveryError{str: "URI not found"}
 }
 
-func DiscoverHtml(id string) (*string, os.Error) {
+func DiscoverHtml(id string) (*string, error) {
 	resp, err := http.Get(id)
 	if err != nil {
 		return nil, err
@@ -79,8 +78,8 @@ func DiscoverHtml(id string) (*string, os.Error) {
 		tt := tokenizer.Next()
 		switch tt {
 		case html.ErrorToken:
-			log.Println("Error: ", tokenizer.Error())
-			return nil, tokenizer.Error()
+			log.Println("Error: ", tokenizer.Err())
+			return nil, tokenizer.Err()
 		case html.StartTagToken, html.EndTagToken:
 			tk := tokenizer.Token()
 			if tk.Data == "link" {
@@ -99,7 +98,7 @@ func DiscoverHtml(id string) (*string, os.Error) {
 	return nil, &DiscoveryError{str: "provider not found"}
 }
 
-func PrepareRedirect(url *string, returnTo string) (*string, os.Error) {
+func PrepareRedirect(url *string, returnTo string) (*string, error) {
 	redirect := *url + "?openid.ns=http://specs.openid.net/auth/2.0"
 	redirect += "&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select"
 	redirect += "&openid.identity=http://specs.openid.net/auth/2.0/identifier_select"
@@ -114,7 +113,7 @@ func PrepareRedirect(url *string, returnTo string) (*string, os.Error) {
 	return &redirect, nil
 }
 
-func ValidateLogin(params map[string]string, expectedURL string, thisURL string) (*string, os.Error) {
+func ValidateLogin(params map[string]string, expectedURL string, thisURL string) (*string, error) {
 	if v, ok := params["openid.mode"]; !ok || v != "id_res" {
 		return nil, &DiscoveryError{str: "Open ID connection failed"}
 	}
@@ -147,7 +146,7 @@ func verifyAssertion(params map[string]string) bool {
 
 	resp, err := http.PostForm(params["openid.op_endpoint"], fields)
 	if err != nil {
-		log.Println(err.String())
+		log.Println(err.Error())
 		return false
 	}
 	defer resp.Body.Close()
@@ -155,7 +154,7 @@ func verifyAssertion(params map[string]string) bool {
 	content, err := ioutil.ReadAll(resp.Body)
 	response := string(content)
 	log.Println(response)
-	lines := strings.Split(response, "\n", -1)
+	lines := strings.Split(response, "\n")
 	for _, l := range lines {
 		if l == "is_valid:true" {
 			return true
