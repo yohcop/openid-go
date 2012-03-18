@@ -1,8 +1,8 @@
 package openid
 
 import (
-  "strings"
   "errors"
+  "strings"
 )
 
 func Normalize(id string) (string, error) {
@@ -30,7 +30,7 @@ func Normalize(id string) (string, error) {
   // with the fragment delimiter character "#". See Section 11.5.2 for
   // more information.
   if !strings.HasPrefix(id, "http://") && !strings.HasPrefix(id,
-      "https://") {
+    "https://") {
     id = "http://" + id
   }
   if fragmentIndex := strings.Index(id, "#"); fragmentIndex != -1 {

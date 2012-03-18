@@ -19,8 +19,8 @@ func redirectUrl(id, callbackUrl, realm string, getter httpGetter) (string, erro
 func buildRedirectUrl(opEndpoint, opLocalId, claimedId, returnTo, realm string) (string, error) {
   values := make(url.Values)
   values.Add("openid.ns", "http://specs.openid.net/auth/2.0")
-	values.Add("openid.mode", "checkid_setup")
-	values.Add("openid.return_to", returnTo)
+  values.Add("openid.mode", "checkid_setup")
+  values.Add("openid.return_to", returnTo)
 
   if len(claimedId) > 0 {
     values.Add("openid.claimed_id", claimedId)
@@ -36,8 +36,8 @@ func buildRedirectUrl(opEndpoint, opLocalId, claimedId, returnTo, realm string) 
   }
 
   if len(realm) > 0 {
-	  values.Add("openid.realm", realm)
+    values.Add("openid.realm", realm)
   }
 
-	return opEndpoint + "?" + values.Encode(), nil
+  return opEndpoint + "?" + values.Encode(), nil
 }

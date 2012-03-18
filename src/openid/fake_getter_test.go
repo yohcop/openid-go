@@ -3,12 +3,12 @@ package openid
 import (
   "bufio"
   "bytes"
-  "net/http"
   "errors"
+  "net/http"
 )
 
 type fakeGetter struct {
-  urls map[string]string
+  urls      map[string]string
   redirects map[string]string
 }
 
@@ -28,7 +28,7 @@ func (f *fakeGetter) Get(url string, headers map[string]string) (resp *http.Resp
     }
 
     return http.ReadResponse(bufio.NewReader(
-          bytes.NewBuffer([]byte(doc))), request)
+      bytes.NewBuffer([]byte(doc))), request)
   }
   if url, ok := f.redirects[key]; ok {
     return f.Get(url, headers)
@@ -58,7 +58,7 @@ xmlns:openid="http://openid.net/xmlns/1.0">
 </xrds:XRDS>`
 
   // Uses a X-XRDS-Location header to redirect to the valid XRDS document.
-  testGetter.urls["http://example.com/xrds-loc#Accept#application/xrds+xml"]  = `HTTP/1.0 200 OK
+  testGetter.urls["http://example.com/xrds-loc#Accept#application/xrds+xml"] = `HTTP/1.0 200 OK
 X-XRDS-Location: http://example.com/xrds
 
 nothing interesting here`

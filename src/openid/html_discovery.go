@@ -1,8 +1,8 @@
 package openid
 
 import (
-  "exp/html"
   "errors"
+  "exp/html"
   "io"
 )
 
@@ -39,7 +39,7 @@ func findProviderFromHeadLink(input io.Reader) (opEndpoint, opLocalId string, er
             return
           }
           return "", "", errors.New(
-              "LINK with rel=openid2.provider not found")
+            "LINK with rel=openid2.provider not found")
         }
       } else if inHead && tk.Data == "link" {
         provider := false

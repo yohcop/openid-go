@@ -7,10 +7,10 @@ import (
 )
 
 type XrdsIdentifier struct {
-  Type    []string `xml:"Type"`
-  Uri     string `xml:"URI"`
-  LocalId string `xml:"LocalID"`
-  Priority int `xml:"priority,attr"`
+  Type     []string `xml:"Type"`
+  Uri      string   `xml:"URI"`
+  LocalId  string   `xml:"LocalID"`
+  Priority int      `xml:"priority,attr"`
 }
 
 type Xrd struct {
@@ -19,7 +19,7 @@ type Xrd struct {
 
 type XrdsDocument struct {
   XMLName xml.Name `xml:"XRDS"`
-  Xrd     *Xrd  `xml:"XRD"`
+  Xrd     *Xrd     `xml:"XRD"`
 }
 
 func parseXrds(input []byte) (opEndpoint, opLocalId string, err error) {

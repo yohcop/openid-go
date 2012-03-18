@@ -46,8 +46,8 @@ xmlns:openid="http://openid.net/xmlns/1.0">
   </XRD>
 </xrds:XRDS>
     `),
-      "https://www.exampleprovider.com/endpoint/",
-      "https://exampleuser.exampleprovider.com/")
+    "https://www.exampleprovider.com/endpoint/",
+    "https://exampleuser.exampleprovider.com/")
 }
 
 func testExpectOpId(t *testing.T, xrds []byte, op, id string) {
@@ -57,11 +57,11 @@ func testExpectOpId(t *testing.T, xrds []byte, op, id string) {
   } else {
     if receivedOp != op {
       t.Errorf("Extracted OP does not match: Exepect %s, Got %s",
-          op, receivedOp)
+        op, receivedOp)
     }
     if receivedId != id {
       t.Errorf("Extracted ID does not match: Exepect %s, Got %s",
-          id, receivedId)
+        id, receivedId)
     }
   }
 }

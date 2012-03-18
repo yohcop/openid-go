@@ -1,8 +1,8 @@
 package openid
 
 import (
-  "testing"
   "bytes"
+  "testing"
 )
 
 func TestFindMetaXrdsLocation(t *testing.T) {

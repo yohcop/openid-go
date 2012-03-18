@@ -1,10 +1,10 @@
 package openid
 
 import (
-  "io/ioutil"
+  "errors"
   "exp/html"
   "io"
-  "errors"
+  "io/ioutil"
 )
 
 var yadisHeaders = map[string]string{
@@ -102,7 +102,7 @@ func findMetaXrdsLocation(input io.Reader) (location string, err error) {
         content := ""
         for _, attr := range tk.Attr {
           if attr.Key == "http-equiv" &&
-              attr.Val == "X-XRDS-Location" {
+            attr.Val == "X-XRDS-Location" {
             ok = true
           } else if attr.Key == "content" {
             content = attr.Val
@@ -116,4 +116,3 @@ func findMetaXrdsLocation(input io.Reader) (location string, err error) {
   }
   return "", errors.New("Meta X-XRDS-Location not found")
 }
-

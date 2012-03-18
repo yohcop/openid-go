@@ -1,8 +1,8 @@
 package openid
 
 import (
-  "testing"
   "bytes"
+  "testing"
 )
 
 func TestFindEndpointFromLink(t *testing.T) {
@@ -43,11 +43,11 @@ func searchLink(t *testing.T, doc, opEndpoint, claimedId string, err bool) {
   } else if e == nil {
     if op != opEndpoint {
       t.Errorf("Found bad endpoint: Expected %s, Got %s",
-          op, opEndpoint)
+        op, opEndpoint)
     }
     if id != claimedId {
       t.Errorf("Found bad id: Expected %s, Got %s",
-          id, claimedId)
+        id, claimedId)
     }
   }
 }

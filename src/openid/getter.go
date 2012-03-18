@@ -9,7 +9,8 @@ type httpGetter interface {
   Get(uri string, headers map[string]string) (resp *http.Response, err error)
 }
 
-type defaultGetter struct {}
+type defaultGetter struct{}
+
 var urlGetter = &defaultGetter{}
 
 func (*defaultGetter) Get(uri string, headers map[string]string) (resp *http.Response, err error) {
@@ -23,4 +24,3 @@ func (*defaultGetter) Get(uri string, headers map[string]string) (resp *http.Res
   client := &http.Client{}
   return client.Do(request)
 }
-
