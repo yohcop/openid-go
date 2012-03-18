@@ -45,6 +45,8 @@ func TestRedirectWithDiscovery(t *testing.T) {
     "openid.ns=http://specs.openid.net/auth/2.0" +
     "&openid.mode=checkid_setup" +
     "&openid.return_to=mysite/cb" +
+    "&openid.claimed_id=" +
+    "http://specs.openid.net/auth/2.0/identifier_select" +
     "&openid.identity=" +
     "http://specs.openid.net/auth/2.0/identifier_select"
 
@@ -84,16 +86,7 @@ func compareUrls(t *testing.T, url1, expected string) {
   }
   q1, _ := url.ParseQuery(p1.RawQuery)
   q2, _ := url.ParseQuery(p2.RawQuery)
-  if len(q1) != len(q2) {
-    t.Errorf("URLs don't match: different number of query params: %s vs %s", url1, expected)
-  }
-
-  for k, _ := range q1 {
-    v1 := q1.Get(k)
-    v2 := q2.Get(k)
-    if v1 != v2 {
-      t.Errorf("URLs don't match: Param %s different: %s vs %s (%s vs %s)",
-        k, v1, v2, url1, expected)
-    }
+  if err := compareQueryParams(q1, q2); err != nil {
+    t.Errorf("URLs query params don't match: %s: %s vs %s", err, url1, expected)
   }
 }

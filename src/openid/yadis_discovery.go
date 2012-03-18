@@ -5,6 +5,7 @@ import (
   "exp/html"
   "io"
   "io/ioutil"
+  "strings"
 )
 
 var yadisHeaders = map[string]string{
@@ -37,7 +38,7 @@ func yadisDiscovery(id string, getter httpGetter) (opEndpoint string, opLocalId 
     // 2. HTTP response-headers that include an X-XRDS-Location
     // response-header, together with a document
     return getYadisResourceDescriptor(l, getter)
-  } else if contentType == "text/html" {
+  } else if strings.Contains(contentType, "text/html") {
     // 1. An HTML document with a <head> element that includes a
     // <meta> element with http-equiv attribute, X-XRDS-Location,
 
@@ -46,13 +47,15 @@ func yadisDiscovery(id string, getter httpGetter) (opEndpoint string, opLocalId 
     } else {
       return "", "", err
     }
-  } else if contentType == "application/xrds+xml" {
+  } else if strings.Contains(contentType, "application/xrds+xml") {
     // 4. A document of MIME media type, application/xrds+xml.
     if body, err := ioutil.ReadAll(resp.Body); err == nil {
       return parseXrds(body)
     } else {
       return "", "", err
     }
+  } else {
+    return "", "", errors.New("No expected header, or content type")
   }
   // 3. HTTP response-headers only, which MAY include an
   // X-XRDS-Location response-header, a content-type

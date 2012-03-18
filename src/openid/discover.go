@@ -22,6 +22,8 @@ func Discover(id string) (opEndpoint, opLocalId, claimedId string, err error) {
   return discover(id, urlGetter)
 }
 
+var identifier_select = "http://specs.openid.net/auth/2.0/identifier_select"
+
 // Same as the above public Discover function, but test-friendly.
 func discover(id string, getter httpGetter) (opEndpoint, opLocalId, claimedId string, err error) {
   // From OpenID specs, 7.3: Discovery.
@@ -38,13 +40,21 @@ func discover(id string, getter httpGetter) (opEndpoint, opLocalId, claimedId st
   // If it is a URL, the Yadis protocol [Yadis] SHALL be first
   // attempted. If it succeeds, the result is again an XRDS
   // document.
-  if opEndpoint, opLocalId, err = yadisDiscovery(id, getter); err == nil {
-    return
+  if opEndpoint, opLocalId, err = yadisDiscovery(id, getter); err != nil {
+    // If the Yadis protocol fails and no valid XRDS document is
+    // retrieved, or no Service Elements are found in the XRDS
+    // document, the URL is retrieved and HTML-Based discovery SHALL be
+    // attempted.
+    opEndpoint, opLocalId, claimedId, err = htmlDiscovery(id, getter)
   }
 
-  // If the Yadis protocol fails and no valid XRDS document is
-  // retrieved, or no Service Elements are found in the XRDS
-  // document, the URL is retrieved and HTML-Based discovery SHALL be
-  // attempted.
-  return htmlDiscovery(id, getter)
+  if err != nil {
+    return "", "", "", err
+  }
+
+  if claimedId == "" {
+    claimedId = identifier_select
+    opLocalId = identifier_select
+  }
+  return
 }

@@ -6,6 +6,9 @@ import (
   "strings"
 )
 
+// TODO: As per 11.2 in openid 2 specs, a service may have multiple
+//       URIs. We don't care for discovery really, but we do care for
+//       verification though.
 type XrdsIdentifier struct {
   Type     []string `xml:"Type"`
   Uri      string   `xml:"URI"`

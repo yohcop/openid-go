@@ -2,11 +2,13 @@ package openid
 
 import (
   "net/http"
+  "net/url"
 )
 
 // Interface that simplifies testing.
 type httpGetter interface {
   Get(uri string, headers map[string]string) (resp *http.Response, err error)
+  Post(uri string, form url.Values) (resp *http.Response, err error)
 }
 
 type defaultGetter struct{}
@@ -23,4 +25,8 @@ func (*defaultGetter) Get(uri string, headers map[string]string) (resp *http.Res
   }
   client := &http.Client{}
   return client.Do(request)
+}
+
+func (*defaultGetter) Post(uri string, form url.Values) (resp *http.Response, err error) {
+  return http.PostForm(uri, form)
 }

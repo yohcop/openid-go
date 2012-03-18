@@ -7,11 +7,11 @@ import (
 func TestDiscoverWithYadis(t *testing.T) {
   // They all redirect to the same XRDS document
   expectOpIdErr(t, "http://example.com/xrds",
-    "foo", "bar", "", false)
+    "foo", identifier_select, identifier_select, false)
   expectOpIdErr(t, "http://example.com/xrds-loc",
-    "foo", "bar", "", false)
+    "foo", identifier_select, identifier_select, false)
   expectOpIdErr(t, "http://example.com/xrds-meta",
-    "foo", "bar", "", false)
+    "foo", identifier_select, identifier_select, false)
 }
 
 func TestDiscoverWithHtml(t *testing.T) {
