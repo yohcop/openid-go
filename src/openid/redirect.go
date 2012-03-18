@@ -27,11 +27,11 @@ func buildRedirectUrl(opEndpoint, opLocalId, claimedId, returnTo, realm string) 
     if len(opLocalId) > 0 {
       values.Add("openid.identity", opLocalId)
     } else {
-      values.Add("&openid.identity",
+      values.Add("openid.identity",
         "http://specs.openid.net/auth/2.0/identifier_select")
     }
   } else {
-    values.Add("&openid.identity",
+    values.Add("openid.identity",
       "http://specs.openid.net/auth/2.0/identifier_select")
   }
 

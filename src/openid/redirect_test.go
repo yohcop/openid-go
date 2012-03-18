@@ -66,25 +66,34 @@ func expectRedirect(t *testing.T, uri, callback, realm, exRedirect string, exErr
   compareUrls(t, redirect, exRedirect)
 }
 
-func compareUrls(t *testing.T, url1, url2 string) {
+func compareUrls(t *testing.T, url1, expected string) {
   p1, err1 := url.Parse(url1)
-  p2, err2 := url.Parse(url2)
+  p2, err2 := url.Parse(expected)
   if err1 != nil {
     t.Errorf("Url1 non parsable: %s", err1)
     return
   }
   if err2 != nil {
-    t.Errorf("Url2 non parsable: %s", err2)
+    t.Errorf("ExpectedUrl non parsable: %s", err2)
     return
   }
   if p1.Scheme != p2.Scheme ||
     p1.Host != p2.Host ||
     p1.Path != p2.Path {
-    t.Errorf("URLs don't match: %s vs %s", url1, url2)
+    t.Errorf("URLs don't match: %s vs %s", url1, expected)
   }
   q1, _ := url.ParseQuery(p1.RawQuery)
   q2, _ := url.ParseQuery(p2.RawQuery)
   if len(q1) != len(q2) {
-    t.Errorf("URLs don't match: different number of query params: %s vs %s", url1, url2)
+    t.Errorf("URLs don't match: different number of query params: %s vs %s", url1, expected)
+  }
+
+  for k, _ := range q1 {
+    v1 := q1.Get(k)
+    v2 := q2.Get(k)
+    if v1 != v2 {
+      t.Errorf("URLs don't match: Param %s different: %s vs %s (%s vs %s)",
+        k, v1, v2, url1, expected)
+    }
   }
 }
