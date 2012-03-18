@@ -54,15 +54,13 @@ func yadisDiscovery(id string, getter httpGetter) (opEndpoint string, opLocalId 
     } else {
       return "", "", err
     }
-  } else {
-    return "", "", errors.New("No expected header, or content type")
   }
   // 3. HTTP response-headers only, which MAY include an
   // X-XRDS-Location response-header, a content-type
   // response-header specifying MIME media type,
   // application/xrds+xml, or both.
   //   (this is handled by one of the 2 previous if statements)
-  return
+  return "", "", errors.New("No expected header, or content type")
 }
 
 // Similar as above, but we expect an absolute Yadis document URL.
