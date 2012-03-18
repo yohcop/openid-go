@@ -10,33 +10,38 @@ import (
 )
 
 func TestGoogleCom(t *testing.T) {
-  endpoint, localId, claimedId, err := Discover("https://www.google.com/accounts/o8/id")
-  if err != nil {
-    t.Errorf("Google.com discovery failed: %s", err)
-  }
-  if endpoint != "https://www.google.com/accounts/o8/ud" {
-    t.Errorf("Unexpected Google.com endpoint: %s", endpoint)
-  }
-  if localId != "http://specs.openid.net/auth/2.0/identifier_select" {
-    t.Errorf("Unexpected Google.com localId: %s", localId)
-  }
-  if claimedId != "http://specs.openid.net/auth/2.0/identifier_select" {
-    t.Errorf("Unexpected Google.com localId: %s", claimedId)
-  }
+  expectDiscovery(t, "https://www.google.com/accounts/o8/id",
+      "https://www.google.com/accounts/o8/ud",
+      "http://specs.openid.net/auth/2.0/identifier_select",
+      "http://specs.openid.net/auth/2.0/identifier_select")
+}
+
+func TestYahoo(t *testing.T) {
+  expectDiscovery(t, "https://me.yahoo.com",
+      "https://open.login.yahooapis.com/openid/op/auth",
+      "http://specs.openid.net/auth/2.0/identifier_select",
+      "http://specs.openid.net/auth/2.0/identifier_select")
 }
 
 func TestYohcop(t *testing.T) {
-  endpoint, localId, claimedId, err := Discover("http://yohcop.net")
+  expectDiscovery(t, "http://yohcop.net",
+      "https://www.google.com/accounts/o8/ud?source=profiles",
+      "http://www.google.com/profiles/yohcop",
+      "http://yohcop.net")
+}
+
+func expectDiscovery(t *testing.T, uri, expectOp, expectLocalId, expectClaimedId string) {
+  endpoint, localId, claimedId, err := Discover(uri)
   if err != nil {
-    t.Errorf("Yohcop.net discovery failed")
+    t.Errorf("Discovery failed")
   }
-  if endpoint != "https://www.google.com/accounts/o8/ud?source=profiles" {
-    t.Errorf("Unexpected yohcop.net endpoint: %s", endpoint)
+  if endpoint != expectOp {
+    t.Errorf("Unexpected endpoint: %s", endpoint)
   }
-  if localId != "http://www.google.com/profiles/yohcop" {
-    t.Errorf("Unexpected yohcop.net localId: %s", localId)
+  if localId != expectLocalId {
+    t.Errorf("Unexpected localId: %s", localId)
   }
-  if claimedId != "http://yohcop.net" {
-    t.Errorf("Unexpected yohcop.net claimedId: %s", claimedId)
+  if claimedId != expectClaimedId {
+    t.Errorf("Unexpected claimedId: %s", claimedId)
   }
 }
