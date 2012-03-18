@@ -1,16 +1,10 @@
+This is a consumer (Relying party) implementation of OpenId 2.0, written in go.
 
-Basic implementation of OpenID consumer in go.
+I am rewriting this library, the previous version was incomplete and unsafe.
 
-Tested with Google and Yahoo open ID providers.
+For this reason, I decided to completely remove the old version.
+Check previous revisions in git history if you are looking for something
+that sort of works, yet *unsafe*.
 
-INSTALL
-=======
-
-goinstall github.com/yohcop/openid.go/openid
-
-
-USE
-===
-
-    import "github.com/yohcop/openid.go/openid"
-
+Here is another open-id consumer library in go:
+https://github.com/fduraffourg/go-openid
