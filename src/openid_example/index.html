@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <title>go OpenID sample app</title>
+  </head>
+  <body>
+    <h1>go OpenID sample app</h1>
+
+    {{if .user}}
+      <p>Welcome {{.user}}.</p>
+      <p>Devs: set a cookie, or this kind of things to
+         identify the user accross different pages.</p>
+    {{else}}
+      <a href="/login">Login</a>
+    {{end}}
+  </body>
+</html>

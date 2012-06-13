@@ -2,6 +2,7 @@ package openid
 
 import (
   "net/url"
+  "strings"
 )
 
 func RedirectUrl(id, callbackUrl, realm string) (string, error) {
@@ -39,5 +40,8 @@ func buildRedirectUrl(opEndpoint, opLocalId, claimedId, returnTo, realm string) 
     values.Add("openid.realm", realm)
   }
 
+  if strings.Contains(opEndpoint, "?") {
+    return opEndpoint + "&" + values.Encode(), nil
+  }
   return opEndpoint + "?" + values.Encode(), nil
 }

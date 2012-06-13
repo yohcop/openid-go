@@ -8,7 +8,11 @@ import (
   "strings"
 )
 
-func Verify(uri string, cache DiscoveryCache, getter httpGetter, nonceStore NonceStore) (id string, err error) {
+func Verify(uri string, cache DiscoveryCache, nonceStore NonceStore) (id string, err error) {
+  return verify(uri, cache, urlGetter, nonceStore)
+}
+
+func verify(uri string, cache DiscoveryCache, getter httpGetter, nonceStore NonceStore) (id string, err error) {
   parsedUrl, err := url.Parse(uri)
   if err != nil {
     return "", err
@@ -60,7 +64,7 @@ func Verify(uri string, cache DiscoveryCache, getter httpGetter, nonceStore Nonc
 //   MUST also be present with the same values in the URL of the HTTP
 //   request the RP received.
 func verifyReturnTo(uri *url.URL, vals url.Values) error {
-  returnTo := vals.Get("return_to")
+  returnTo := vals.Get("openid.return_to")
   rp, err := url.Parse(returnTo)
   if err != nil {
     return err
@@ -75,14 +79,11 @@ func verifyReturnTo(uri *url.URL, vals url.Values) error {
   if err != nil {
     return err
   }
-  return compareQueryParams(vals, qp)
+  return compareQueryParams(qp, vals)
 }
 
+// Any parameter in q1 must also be present in q2, and values must match.
 func compareQueryParams(q1, q2 url.Values) error {
-  if len(q1) != len(q2) {
-    return errors.New("Different number of query params")
-  }
-
   for k := range q1 {
     v1 := q1.Get(k)
     v2 := q2.Get(k)
@@ -143,23 +144,35 @@ func verifyDiscovered(uri *url.URL, vals url.Values, cache DiscoveryCache, gette
     // OP Identifier.
     discoveredClaimedId = discovered.ClaimedId()
     discoveredLocalId = discovered.OpLocalId()
-  } else {
-    // If the Claimed Identifier was not previously discovered by the
-    // Relying Party (the "openid.identity" in the request was
-    // "http://specs.openid.net/auth/2.0/identifier_select" or a
-    // different Identifier, or if the OP is sending an unsolicited
-    // positive assertion), the Relying Party MUST perform discovery on
-    // the Claimed Identifier in the response to make sure that the OP is
-    // authorized to make assertions about the Claimed Identifier.
-    if _, lid, dci, err := discover(endpoint, getter); err == nil {
-      discoveredClaimedId = dci
-      discoveredLocalId = lid
-    }
   }
 
-  if claimedIdVerify != discoveredClaimedId {
-    return errors.New("Discovered claimed ID do not match claimed_id")
+  // If the Claimed Identifier was not previously discovered by the
+  // Relying Party (the "openid.identity" in the request was
+  // "http://specs.openid.net/auth/2.0/identifier_select" or a different
+  // Identifier, or if the OP is sending an unsolicited positive
+  // assertion), the Relying Party MUST perform discovery on the Claimed
+  // Identifier in the response to make sure that the OP is authorized to
+  // make assertions about the Claimed Identifier.
+  if discovered == nil ||
+     discoveredClaimedId ==
+       "http://specs.openid.net/auth/2.0/identifier_select" ||
+     claimedIdVerify != discoveredClaimedId {
+    if ep, lid, dci, err := discover(claimedId, getter); err == nil {
+      discoveredClaimedId = dci
+      discoveredLocalId = lid
+
+      if ep == endpoint {
+        // This claimed ID points to the same endpoint, therefore this
+        // endpoint is authorized to make assertions about that claimed ID.
+        // TODO: There may be multiple undpoints found during discovery.
+        // They should all be checked.
+        return nil
+      }
+    }
+    return errors.New("Could not verify that the claimed ID")
   }
+
+  // we know here that claimedIdVerify == discoveredClaimedId.
   if localId != discoveredLocalId {
     return errors.New("Discovered local ID does not match identity")
   }
@@ -167,7 +180,7 @@ func verifyDiscovered(uri *url.URL, vals url.Values, cache DiscoveryCache, gette
 }
 
 func verifyNonce(vals url.Values, store NonceStore) error {
-  nonce := vals.Get("openid.nonce")
+  nonce := vals.Get("openid.response_nonce")
   endpoint := vals.Get("openid.endpoint")
   return store.Accept(endpoint, nonce)
 }
@@ -192,7 +205,7 @@ func verifySignature(uri string, vals url.Values, getter httpGetter) error {
       params.Add(k, v)
     }
   }
-  resp, err := getter.Post(vals.Get("openid.endpoint"), params)
+  resp, err := getter.Post(vals.Get("openid.op_endpoint"), params)
   if err != nil {
     return err
   }

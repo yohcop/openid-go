@@ -31,13 +31,13 @@ func (s *SimpleDiscoveredInfo) ClaimedId() string {
   return s.claimedId
 }
 
-type simpleDiscoveryCache map[string]DiscoveredInfo
+type SimpleDiscoveryCache map[string]DiscoveredInfo
 
-func (s simpleDiscoveryCache) Put(id string, info DiscoveredInfo) {
+func (s SimpleDiscoveryCache) Put(id string, info DiscoveredInfo) {
   s[id] = info
 }
 
-func (s simpleDiscoveryCache) get(id string) DiscoveredInfo {
+func (s SimpleDiscoveryCache) Get(id string) DiscoveredInfo {
   if info, has := s[id]; has {
     return info
   }
