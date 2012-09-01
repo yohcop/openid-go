@@ -1,10 +1,18 @@
-This is a consumer (Relying party) implementation of OpenId 2.0, written in go.
+This is a consumer (Relying party) implementation of OpenId 2.0,
+written in go.
 
-I am rewriting this library, the previous version was incomplete and unsafe.
+== Code example ==
 
-For this reason, I decided to completely remove the old version.
-Check previous revisions in git history if you are looking for something
-that sort of works, yet *unsafe*.
+See src/openid_example for a simple webserver using the openID
+implementation. Also, read the comment about the NonceStore towards
+the top of that file.
+
+== License ==
+
+Distributed under the Apache v2.0 license:
+http://www.apache.org/licenses/LICENSE-2.0.html
+
+== Related projects ==
 
 Here is another open-id consumer library in go:
 https://github.com/fduraffourg/go-openid
