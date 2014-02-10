@@ -2,7 +2,7 @@ package openid
 
 import (
   "errors"
-  "exp/html"
+  "code.google.com/p/go.net/html"
   "io"
   "io/ioutil"
   "strings"

@@ -16,7 +16,7 @@ func TestDefaultNonceStore(t *testing.T) {
   now30sStr := now30s.Format(time.RFC3339)
   now2mStr := now2m.Format(time.RFC3339)
 
-  ns := &SimpleNonceStore{store: make(map[string][]*Nonce)}
+  ns := &SimpleNonceStore{Store: make(map[string][]*Nonce)}
   reject(t, ns, "1", "foo")                        // invalid nonce
   reject(t, ns, "1", "fooBarBazLongerThan20Chars") // invalid nonce
 
