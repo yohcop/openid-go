@@ -11,8 +11,3 @@ the top of that file.
 
 Distributed under the Apache v2.0 license:
 http://www.apache.org/licenses/LICENSE-2.0.html
-
-== Related projects ==
-
-Here is another open-id consumer library in go:
-https://github.com/fduraffourg/go-openid
