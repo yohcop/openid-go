@@ -2,7 +2,7 @@ package openid
 
 import (
   "errors"
-  "code.google.com/p/go.net/html"
+  "golang.org/x/net/html"
   "io"
   "io/ioutil"
   "strings"
