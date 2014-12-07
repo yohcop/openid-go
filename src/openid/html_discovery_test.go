@@ -1,17 +1,17 @@
 package openid
 
 import (
-  "bytes"
-  "testing"
+	"bytes"
+	"testing"
 )
 
 func TestFindEndpointFromLink(t *testing.T) {
-  searchLink(t, `
+	searchLink(t, `
       <html>
         <head>
           <link rel="openid2.provider" href="example.com/openid">
       `, "example.com/openid", "", false)
-  searchLink(t, `
+	searchLink(t, `
       <html>
         <head>
           <link rel="openid2.provider" href="foo.com">
@@ -22,13 +22,13 @@ func TestFindEndpointFromLink(t *testing.T) {
 }
 
 func TestNoEndpointFromLink(t *testing.T) {
-  searchLink(t, `
+	searchLink(t, `
       <html>
         <head>
           <link rel="openid2.provider">
       `, "", "", true)
-  // Outside of head.
-  searchLink(t, `
+	// Outside of head.
+	searchLink(t, `
       <html>
         <head></head>
         <link rel="openid2.provider" href="example.com/openid">
@@ -36,18 +36,18 @@ func TestNoEndpointFromLink(t *testing.T) {
 }
 
 func searchLink(t *testing.T, doc, opEndpoint, claimedId string, err bool) {
-  r := bytes.NewReader([]byte(doc))
-  op, id, e := findProviderFromHeadLink(r)
-  if (e != nil) != err {
-    t.Errorf("Unexpected error: '%s'", e)
-  } else if e == nil {
-    if op != opEndpoint {
-      t.Errorf("Found bad endpoint: Expected %s, Got %s",
-        op, opEndpoint)
-    }
-    if id != claimedId {
-      t.Errorf("Found bad id: Expected %s, Got %s",
-        id, claimedId)
-    }
-  }
+	r := bytes.NewReader([]byte(doc))
+	op, id, e := findProviderFromHeadLink(r)
+	if (e != nil) != err {
+		t.Errorf("Unexpected error: '%s'", e)
+	} else if e == nil {
+		if op != opEndpoint {
+			t.Errorf("Found bad endpoint: Expected %s, Got %s",
+				op, opEndpoint)
+		}
+		if id != claimedId {
+			t.Errorf("Found bad id: Expected %s, Got %s",
+				id, claimedId)
+		}
+	}
 }
