@@ -12,7 +12,7 @@ import (
 var yadisHeaders = map[string]string{
 	"Accept": "application/xrds+xml"}
 
-func yadisDiscovery(id string, getter httpGetter) (opEndpoint string, opLocalId string, err error) {
+func yadisDiscovery(id string, getter httpGetter) (opEndpoint string, opLocalID string, err error) {
 	// Section 6.2.4 of Yadis 1.0 specifications.
 	// The Yadis Protocol is initiated by the Relying Party Agent
 	// with an initial HTTP request using the Yadis URL.
@@ -65,7 +65,7 @@ func yadisDiscovery(id string, getter httpGetter) (opEndpoint string, opLocalId 
 }
 
 // Similar as above, but we expect an absolute Yadis document URL.
-func getYadisResourceDescriptor(id string, getter httpGetter) (opEndpoint string, opLocalId string, err error) {
+func getYadisResourceDescriptor(id string, getter httpGetter) (opEndpoint string, opLocalID string, err error) {
 	resp, err := getter.Get(id, yadisHeaders)
 	if err != nil {
 		return "", "", err

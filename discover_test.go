@@ -6,32 +6,32 @@ import (
 
 func TestDiscoverWithYadis(t *testing.T) {
 	// They all redirect to the same XRDS document
-	expectOpIdErr(t, "http://example.com/xrds",
-		"foo", identifier_select, identifier_select, false)
-	expectOpIdErr(t, "http://example.com/xrds-loc",
-		"foo", identifier_select, identifier_select, false)
-	expectOpIdErr(t, "http://example.com/xrds-meta",
-		"foo", identifier_select, identifier_select, false)
+	expectOpIDErr(t, "http://example.com/xrds",
+		"foo", identifierSelect, identifierSelect, false)
+	expectOpIDErr(t, "http://example.com/xrds-loc",
+		"foo", identifierSelect, identifierSelect, false)
+	expectOpIDErr(t, "http://example.com/xrds-meta",
+		"foo", identifierSelect, identifierSelect, false)
 }
 
 func TestDiscoverWithHtml(t *testing.T) {
 	// Yadis discovery will fail, and fall back to html.
-	expectOpIdErr(t, "http://example.com/html",
+	expectOpIDErr(t, "http://example.com/html",
 		"example.com/openid", "bar-name", "http://example.com/html",
 		false)
 	// The first url redirects to a different URL. The redirected-to
 	// url should be used as claimedID.
-	expectOpIdErr(t, "http://example.com/html-redirect",
+	expectOpIDErr(t, "http://example.com/html-redirect",
 		"example.com/openid", "bar-name", "http://example.com/html",
 		false)
 }
 
 func TestDiscoverBadUrl(t *testing.T) {
-	expectOpIdErr(t, "http://example.com/404", "", "", "", true)
+	expectOpIDErr(t, "http://example.com/404", "", "", "", true)
 }
 
-func expectOpIdErr(t *testing.T, uri, exOpEndpoint, exOpLocalId, exClaimedId string, exErr bool) {
-	opEndpoint, opLocalId, claimedId, err := discover(uri, testGetter)
+func expectOpIDErr(t *testing.T, uri, exOpEndpoint, exOpLocalID, exClaimedID string, exErr bool) {
+	opEndpoint, opLocalID, claimedID, err := discover(uri, testGetter)
 	if (err != nil) != exErr {
 		t.Errorf("Unexpected error: '%s'", err)
 	} else {
@@ -39,13 +39,13 @@ func expectOpIdErr(t *testing.T, uri, exOpEndpoint, exOpLocalId, exClaimedId str
 			t.Errorf("Extracted Endpoint does not match: Exepect %s, Got %s",
 				exOpEndpoint, opEndpoint)
 		}
-		if opLocalId != exOpLocalId {
+		if opLocalID != exOpLocalID {
 			t.Errorf("Extracted LocalId does not match: Exepect %s, Got %s",
-				exOpLocalId, opLocalId)
+				exOpLocalID, opLocalID)
 		}
-		if claimedId != exClaimedId {
+		if claimedID != exClaimedID {
 			t.Errorf("Extracted ClaimedID does not match: Exepect %s, Got %s",
-				exClaimedId, claimedId)
+				exClaimedID, claimedID)
 		}
 	}
 }

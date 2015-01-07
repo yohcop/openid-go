@@ -37,7 +37,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func discoverHandler(w http.ResponseWriter, r *http.Request) {
-	if url, err := openid.RedirectUrl(r.FormValue("id"),
+	if url, err := openid.RedirectURL(r.FormValue("id"),
 		"http://localhost:8080/openidcallback",
 		""); err == nil {
 		http.Redirect(w, r, url, 303)

@@ -6,7 +6,7 @@ import (
 )
 
 func TestBuildRedirectUrl(t *testing.T) {
-	expectUrl(t, "https://endpoint/a", "opLocalId", "claimedId", "returnTo", "realm",
+	expectURL(t, "https://endpoint/a", "opLocalId", "claimedId", "returnTo", "realm",
 		"https://endpoint/a?"+
 			"openid.ns=http://specs.openid.net/auth/2.0"+
 			"&openid.mode=checkid_setup"+
@@ -15,7 +15,7 @@ func TestBuildRedirectUrl(t *testing.T) {
 			"&openid.identity=opLocalId"+
 			"&openid.realm=realm")
 	// No realm.
-	expectUrl(t, "https://endpoint/a", "opLocalId", "claimedId", "returnTo", "",
+	expectURL(t, "https://endpoint/a", "opLocalId", "claimedId", "returnTo", "",
 		"https://endpoint/a?"+
 			"openid.ns=http://specs.openid.net/auth/2.0"+
 			"&openid.mode=checkid_setup"+
@@ -23,7 +23,7 @@ func TestBuildRedirectUrl(t *testing.T) {
 			"&openid.claimed_id=claimedId"+
 			"&openid.identity=opLocalId")
 	// No realm, no claimedId
-	expectUrl(t, "https://endpoint/a", "opLocalId", "", "returnTo", "",
+	expectURL(t, "https://endpoint/a", "opLocalId", "", "returnTo", "",
 		"https://endpoint/a?"+
 			"openid.ns=http://specs.openid.net/auth/2.0"+
 			"&openid.mode=checkid_setup"+
@@ -32,8 +32,8 @@ func TestBuildRedirectUrl(t *testing.T) {
 			"http://specs.openid.net/auth/2.0/identifier_select")
 }
 
-func expectUrl(t *testing.T, opEndpoint, opLocalId, claimedId, returnTo, realm, expected string) {
-	url, err := buildRedirectUrl(opEndpoint, opLocalId, claimedId, returnTo, realm)
+func expectURL(t *testing.T, opEndpoint, opLocalID, claimedID, returnTo, realm, expected string) {
+	url, err := buildRedirectURL(opEndpoint, opLocalID, claimedID, returnTo, realm)
 	if err != nil {
 		t.Errorf("Unexpected error: %s", err)
 	}
@@ -60,7 +60,7 @@ func TestRedirectWithDiscovery(t *testing.T) {
 }
 
 func expectRedirect(t *testing.T, uri, callback, realm, exRedirect string, exErr bool) {
-	redirect, err := redirectUrl(uri, callback, realm, testGetter)
+	redirect, err := redirectURL(uri, callback, realm, testGetter)
 	if (err != nil) != exErr {
 		t.Errorf("Unexpected error: '%s'", err)
 		return

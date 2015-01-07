@@ -5,28 +5,28 @@ import (
 	"strings"
 )
 
-func RedirectUrl(id, callbackUrl, realm string) (string, error) {
-	return redirectUrl(id, callbackUrl, realm, urlGetter)
+func RedirectURL(id, callbackURL, realm string) (string, error) {
+	return redirectURL(id, callbackURL, realm, urlGetter)
 }
 
-func redirectUrl(id, callbackUrl, realm string, getter httpGetter) (string, error) {
-	opEndpoint, opLocalId, claimedId, err := discover(id, getter)
+func redirectURL(id, callbackURL, realm string, getter httpGetter) (string, error) {
+	opEndpoint, opLocalID, claimedID, err := discover(id, getter)
 	if err != nil {
 		return "", err
 	}
-	return buildRedirectUrl(opEndpoint, opLocalId, claimedId, callbackUrl, realm)
+	return buildRedirectURL(opEndpoint, opLocalID, claimedID, callbackURL, realm)
 }
 
-func buildRedirectUrl(opEndpoint, opLocalId, claimedId, returnTo, realm string) (string, error) {
+func buildRedirectURL(opEndpoint, opLocalID, claimedID, returnTo, realm string) (string, error) {
 	values := make(url.Values)
 	values.Add("openid.ns", "http://specs.openid.net/auth/2.0")
 	values.Add("openid.mode", "checkid_setup")
 	values.Add("openid.return_to", returnTo)
 
-	if len(claimedId) > 0 {
-		values.Add("openid.claimed_id", claimedId)
-		if len(opLocalId) > 0 {
-			values.Add("openid.identity", opLocalId)
+	if len(claimedID) > 0 {
+		values.Add("openid.claimed_id", claimedID)
+		if len(opLocalID) > 0 {
+			values.Add("openid.identity", opLocalID)
 		} else {
 			values.Add("openid.identity",
 				"http://specs.openid.net/auth/2.0/identifier_select")

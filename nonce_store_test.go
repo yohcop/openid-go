@@ -6,7 +6,7 @@ import (
 )
 
 func TestDefaultNonceStore(t *testing.T) {
-	*max_nonce_age = 60 * time.Second
+	*maxNonceAge = 60 * time.Second
 	now := time.Now().UTC()
 	// 30 seconds ago
 	now30s := now.Add(-30 * time.Second)

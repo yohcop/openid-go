@@ -5,7 +5,7 @@ import (
 )
 
 func TestXrds(t *testing.T) {
-	testExpectOpId(t, []byte(`
+	testExpectOpID(t, []byte(`
 <?xml version="1.0" encoding="UTF-8"?>
 <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)"
 xmlns:openid="http://openid.net/xmlns/1.0">
@@ -33,7 +33,7 @@ xmlns:openid="http://openid.net/xmlns/1.0">
 </xrds:XRDS>
     `), "foo", "")
 
-	testExpectOpId(t, []byte(`
+	testExpectOpID(t, []byte(`
 <?xml version="1.0" encoding="UTF-8"?>
 <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)"
 xmlns:openid="http://openid.net/xmlns/1.0">
@@ -50,8 +50,8 @@ xmlns:openid="http://openid.net/xmlns/1.0">
 		"https://exampleuser.exampleprovider.com/")
 }
 
-func testExpectOpId(t *testing.T, xrds []byte, op, id string) {
-	receivedOp, receivedId, err := parseXrds(xrds)
+func testExpectOpID(t *testing.T, xrds []byte, op, id string) {
+	receivedOp, receivedID, err := parseXrds(xrds)
 	if err != nil {
 		t.Errorf("Got an error parsing XRDS (%s): %s", string(xrds), err)
 	} else {
@@ -59,9 +59,9 @@ func testExpectOpId(t *testing.T, xrds []byte, op, id string) {
 			t.Errorf("Extracted OP does not match: Exepect %s, Got %s",
 				op, receivedOp)
 		}
-		if receivedId != id {
+		if receivedID != id {
 			t.Errorf("Extracted ID does not match: Exepect %s, Got %s",
-				id, receivedId)
+				id, receivedID)
 		}
 	}
 }
