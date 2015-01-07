@@ -4,10 +4,10 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"openid"
+	"github.com/yohcop/openid.go"
 )
 
-const dataDir = "src/openid_example/"
+const dataDir = "_example/"
 
 // For the demo, we use in-memory infinite storage nonce and discovery
 // cache. In your app, do not use this as it will eat up memory and never
