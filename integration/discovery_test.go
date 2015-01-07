@@ -5,7 +5,7 @@ package integration
 // whatever, they will fail. It's ok though, they are full tests.
 
 import (
-	. "openid"
+	. "github.com/yohcop/openid.go"
 	"testing"
 )
 
