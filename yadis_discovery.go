@@ -43,18 +43,18 @@ func yadisDiscovery(id string, getter httpGetter) (opEndpoint string, opLocalID 
 		// 1. An HTML document with a <head> element that includes a
 		// <meta> element with http-equiv attribute, X-XRDS-Location,
 
-		if metaContent, err := findMetaXrdsLocation(resp.Body); err == nil {
+		metaContent, err := findMetaXrdsLocation(resp.Body)
+		if err == nil {
 			return getYadisResourceDescriptor(metaContent, getter)
-		} else {
-			return "", "", err
 		}
+		return "", "", err
 	} else if strings.Contains(contentType, "application/xrds+xml") {
 		// 4. A document of MIME media type, application/xrds+xml.
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
+		body, err := ioutil.ReadAll(resp.Body)
+		if err == nil {
 			return parseXrds(body)
-		} else {
-			return "", "", err
 		}
+		return "", "", err
 	}
 	// 3. HTTP response-headers only, which MAY include an
 	// X-XRDS-Location response-header, a content-type
@@ -72,12 +72,11 @@ func getYadisResourceDescriptor(id string, getter httpGetter) (opEndpoint string
 	}
 	defer resp.Body.Close()
 	// 4. A document of MIME media type, application/xrds+xml.
-	if body, err := ioutil.ReadAll(resp.Body); err == nil {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err == nil {
 		return parseXrds(body)
-	} else {
-		return "", "", err
 	}
-	return
+	return "", "", err
 }
 
 // Search for
