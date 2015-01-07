@@ -1,7 +1,7 @@
 # openid.go
 
 This is a consumer (Relying party) implementation of OpenId 2.0,
-written in go.
+written in Go.
 
     go get -u github.com/yohcop/openid.go
 
@@ -14,11 +14,10 @@ and doesn't fall behind.
 
 ## Code example
 
-See src/openid_example for a simple webserver using the openID
+See `_example/` for a simple webserver using the openID
 implementation. Also, read the comment about the NonceStore towards
 the top of that file.
 
 ## License
 
-Distributed under the Apache v2.0 license:
-http://www.apache.org/licenses/LICENSE-2.0.html
+Distributed under the [Apache v2.0 license](http://www.apache.org/licenses/LICENSE-2.0.html).
