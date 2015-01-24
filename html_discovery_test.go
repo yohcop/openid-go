@@ -35,7 +35,7 @@ func TestNoEndpointFromLink(t *testing.T) {
       `, "", "", true)
 }
 
-func searchLink(t *testing.T, doc, opEndpoint, claimedId string, err bool) {
+func searchLink(t *testing.T, doc, opEndpoint, claimedID string, err bool) {
 	r := bytes.NewReader([]byte(doc))
 	op, id, e := findProviderFromHeadLink(r)
 	if (e != nil) != err {
@@ -45,9 +45,9 @@ func searchLink(t *testing.T, doc, opEndpoint, claimedId string, err bool) {
 			t.Errorf("Found bad endpoint: Expected %s, Got %s",
 				op, opEndpoint)
 		}
-		if id != claimedId {
+		if id != claimedID {
 			t.Errorf("Found bad id: Expected %s, Got %s",
-				id, claimedId)
+				id, claimedID)
 		}
 	}
 }

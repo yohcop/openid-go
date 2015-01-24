@@ -7,16 +7,16 @@ import (
 	"golang.org/x/net/html"
 )
 
-func htmlDiscovery(id string, getter httpGetter) (opEndpoint, opLocalId, claimedId string, err error) {
+func htmlDiscovery(id string, getter httpGetter) (opEndpoint, opLocalID, claimedID string, err error) {
 	resp, err := getter.Get(id, nil)
 	if err != nil {
 		return "", "", "", err
 	}
-	opEndpoint, opLocalId, err = findProviderFromHeadLink(resp.Body)
-	return opEndpoint, opLocalId, resp.Request.URL.String(), err
+	opEndpoint, opLocalID, err = findProviderFromHeadLink(resp.Body)
+	return opEndpoint, opLocalID, resp.Request.URL.String(), err
 }
 
-func findProviderFromHeadLink(input io.Reader) (opEndpoint, opLocalId string, err error) {
+func findProviderFromHeadLink(input io.Reader) (opEndpoint, opLocalID string, err error) {
 	tokenizer := html.NewTokenizer(input)
 	inHead := false
 	for {
@@ -44,23 +44,23 @@ func findProviderFromHeadLink(input io.Reader) (opEndpoint, opLocalId string, er
 				}
 			} else if inHead && tk.Data == "link" {
 				provider := false
-				localId := false
+				localID := false
 				href := ""
 				for _, attr := range tk.Attr {
 					if attr.Key == "rel" {
 						if attr.Val == "openid2.provider" {
 							provider = true
 						} else if attr.Val == "openid2.local_id" {
-							localId = true
+							localID = true
 						}
 					} else if attr.Key == "href" {
 						href = attr.Val
 					}
 				}
-				if provider && !localId && len(href) > 0 {
+				if provider && !localID && len(href) > 0 {
 					opEndpoint = href
-				} else if !provider && localId && len(href) > 0 {
-					opLocalId = href
+				} else if !provider && localID && len(href) > 0 {
+					opLocalID = href
 				}
 			}
 		}

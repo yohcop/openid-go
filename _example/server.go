@@ -1,13 +1,13 @@
 package main
 
 import (
+	"github.com/yohcop/openid.go"
 	"html/template"
 	"log"
 	"net/http"
-	"openid"
 )
 
-const dataDir = "src/openid_example/"
+const dataDir = "_example/"
 
 // For the demo, we use in-memory infinite storage nonce and discovery
 // cache. In your app, do not use this as it will eat up memory and never
@@ -37,7 +37,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func discoverHandler(w http.ResponseWriter, r *http.Request) {
-	if url, err := openid.RedirectUrl(r.FormValue("id"),
+	if url, err := openid.RedirectURL(r.FormValue("id"),
 		"http://localhost:8080/openidcallback",
 		""); err == nil {
 		http.Redirect(w, r, url, 303)

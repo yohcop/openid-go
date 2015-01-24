@@ -12,7 +12,7 @@ import (
 var yadisHeaders = map[string]string{
 	"Accept": "application/xrds+xml"}
 
-func yadisDiscovery(id string, getter httpGetter) (opEndpoint string, opLocalId string, err error) {
+func yadisDiscovery(id string, getter httpGetter) (opEndpoint string, opLocalID string, err error) {
 	// Section 6.2.4 of Yadis 1.0 specifications.
 	// The Yadis Protocol is initiated by the Relying Party Agent
 	// with an initial HTTP request using the Yadis URL.
@@ -43,18 +43,18 @@ func yadisDiscovery(id string, getter httpGetter) (opEndpoint string, opLocalId 
 		// 1. An HTML document with a <head> element that includes a
 		// <meta> element with http-equiv attribute, X-XRDS-Location,
 
-		if metaContent, err := findMetaXrdsLocation(resp.Body); err == nil {
+		metaContent, err := findMetaXrdsLocation(resp.Body)
+		if err == nil {
 			return getYadisResourceDescriptor(metaContent, getter)
-		} else {
-			return "", "", err
 		}
+		return "", "", err
 	} else if strings.Contains(contentType, "application/xrds+xml") {
 		// 4. A document of MIME media type, application/xrds+xml.
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
+		body, err := ioutil.ReadAll(resp.Body)
+		if err == nil {
 			return parseXrds(body)
-		} else {
-			return "", "", err
 		}
+		return "", "", err
 	}
 	// 3. HTTP response-headers only, which MAY include an
 	// X-XRDS-Location response-header, a content-type
@@ -65,19 +65,18 @@ func yadisDiscovery(id string, getter httpGetter) (opEndpoint string, opLocalId 
 }
 
 // Similar as above, but we expect an absolute Yadis document URL.
-func getYadisResourceDescriptor(id string, getter httpGetter) (opEndpoint string, opLocalId string, err error) {
+func getYadisResourceDescriptor(id string, getter httpGetter) (opEndpoint string, opLocalID string, err error) {
 	resp, err := getter.Get(id, yadisHeaders)
 	if err != nil {
 		return "", "", err
 	}
 	defer resp.Body.Close()
 	// 4. A document of MIME media type, application/xrds+xml.
-	if body, err := ioutil.ReadAll(resp.Body); err == nil {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err == nil {
 		return parseXrds(body)
-	} else {
-		return "", "", err
 	}
-	return
+	return "", "", err
 }
 
 // Search for

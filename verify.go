@@ -13,11 +13,11 @@ func Verify(uri string, cache DiscoveryCache, nonceStore NonceStore) (id string,
 }
 
 func verify(uri string, cache DiscoveryCache, getter httpGetter, nonceStore NonceStore) (id string, err error) {
-	parsedUrl, err := url.Parse(uri)
+	parsedURL, err := url.Parse(uri)
 	if err != nil {
 		return "", err
 	}
-	values, err := url.ParseQuery(parsedUrl.RawQuery)
+	values, err := url.ParseQuery(parsedURL.RawQuery)
 	if err != nil {
 		return "", err
 	}
@@ -28,13 +28,13 @@ func verify(uri string, cache DiscoveryCache, getter httpGetter, nonceStore Nonc
 
 	// - The value of "openid.return_to" matches the URL of the current
 	//   request (Section 11.1)
-	if err = verifyReturnTo(parsedUrl, values); err != nil {
+	if err = verifyReturnTo(parsedURL, values); err != nil {
 		return "", err
 	}
 
 	// - Discovered information matches the information in the assertion
 	//   (Section 11.2)
-	if err = verifyDiscovered(parsedUrl, values, cache, getter); err != nil {
+	if err = verifyDiscovered(parsedURL, values, cache, getter); err != nil {
 		return "", err
 	}
 
@@ -106,12 +106,12 @@ func verifyDiscovered(uri *url.URL, vals url.Values, cache DiscoveryCache, gette
 	if len(endpoint) == 0 {
 		return errors.New("missing openid.op_endpoint url param")
 	}
-	localId := vals.Get("openid.identity")
-	if len(localId) == 0 {
+	localID := vals.Get("openid.identity")
+	if len(localID) == 0 {
 		return errors.New("no localId to verify")
 	}
-	claimedId := vals.Get("openid.claimed_id")
-	if len(claimedId) == 0 {
+	claimedID := vals.Get("openid.claimed_id")
+	if len(claimedID) == 0 {
 		// If no Claimed Identifier is present in the response, the
 		// assertion is not about an identifier and the RP MUST NOT use the
 		// User-supplied Identifier associated with the current OpenID
@@ -128,22 +128,22 @@ func verifyDiscovered(uri *url.URL, vals url.Values, cache DiscoveryCache, gette
 	// fragment, the fragment part and the fragment delimiter character "#"
 	// MUST NOT be used for the purposes of verifying the discovered
 	// information.
-	claimedIdVerify := claimedId
-	if fragmentIndex := strings.Index(claimedId, "#"); fragmentIndex != -1 {
-		claimedIdVerify = claimedId[0:fragmentIndex]
+	claimedIDVerify := claimedID
+	if fragmentIndex := strings.Index(claimedID, "#"); fragmentIndex != -1 {
+		claimedIDVerify = claimedID[0:fragmentIndex]
 	}
 
 	discovered := cache.Get(endpoint)
-	discoveredClaimedId := ""
-	discoveredLocalId := ""
+	discoveredClaimedID := ""
+	discoveredLocalID := ""
 	if discovered != nil {
 		// If the Claimed Identifier is included in the assertion, it
 		// MUST have been discovered by the Relying Party and the
 		// information in the assertion MUST be present in the
 		// discovered information. The Claimed Identifier MUST NOT be an
 		// OP Identifier.
-		discoveredClaimedId = discovered.ClaimedId()
-		discoveredLocalId = discovered.OpLocalId()
+		discoveredClaimedID = discovered.ClaimedID()
+		discoveredLocalID = discovered.OpLocalID()
 	}
 
 	// If the Claimed Identifier was not previously discovered by the
@@ -154,12 +154,12 @@ func verifyDiscovered(uri *url.URL, vals url.Values, cache DiscoveryCache, gette
 	// Identifier in the response to make sure that the OP is authorized to
 	// make assertions about the Claimed Identifier.
 	if discovered == nil ||
-		discoveredClaimedId ==
+		discoveredClaimedID ==
 			"http://specs.openid.net/auth/2.0/identifier_select" ||
-		claimedIdVerify != discoveredClaimedId {
-		if ep, lid, dci, err := discover(claimedId, getter); err == nil {
-			discoveredClaimedId = dci
-			discoveredLocalId = lid
+		claimedIDVerify != discoveredClaimedID {
+		if ep, lid, dci, err := discover(claimedID, getter); err == nil {
+			discoveredClaimedID = dci
+			discoveredLocalID = lid
 
 			if ep == endpoint {
 				// This claimed ID points to the same endpoint, therefore this
@@ -173,7 +173,7 @@ func verifyDiscovered(uri *url.URL, vals url.Values, cache DiscoveryCache, gette
 	}
 
 	// we know here that claimedIdVerify == discoveredClaimedId.
-	if localId != discoveredLocalId {
+	if localID != discoveredLocalID {
 		return errors.New("Discovered local ID does not match identity")
 	}
 	return nil
