@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/yohcop/openid.go"
+	"github.com/yohcop/openid-go"
 	"html/template"
 	"log"
 	"net/http"
