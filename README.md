@@ -3,7 +3,7 @@
 This is a consumer (Relying party) implementation of OpenId 2.0,
 written in Go.
 
-    go get -u github.com/yohcop/openid.go
+    go get -u github.com/yohcop/openid-go
 
 ## Github
 
