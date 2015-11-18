@@ -103,7 +103,7 @@ func findMetaXrdsLocation(input io.Reader) (location string, err error) {
 				content := ""
 				for _, attr := range tk.Attr {
 					if attr.Key == "http-equiv" &&
-						attr.Val == "X-XRDS-Location" {
+						strings.ToLower(attr.Val) == "x-xrds-location" {
 						ok = true
 					} else if attr.Key == "content" {
 						content = attr.Val
