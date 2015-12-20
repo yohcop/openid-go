@@ -16,7 +16,10 @@ and doesn't fall behind.
 
 See `_example/` for a simple webserver using the openID
 implementation. Also, read the comment about the NonceStore towards
-the top of that file.
+the top of that file. The example must be run for the openid-go
+directory, like so:
+
+    go run _example/server.go
 
 ## License
 
