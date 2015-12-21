@@ -9,13 +9,6 @@ import (
 	"testing"
 )
 
-func TestGoogleCom(t *testing.T) {
-	expectDiscovery(t, "https://www.google.com/accounts/o8/id",
-		"https://www.google.com/accounts/o8/ud",
-		"http://specs.openid.net/auth/2.0/identifier_select",
-		"http://specs.openid.net/auth/2.0/identifier_select")
-}
-
 func TestYahoo(t *testing.T) {
 	expectDiscovery(t, "https://me.yahoo.com",
 		"https://open.login.yahooapis.com/openid/op/auth",
