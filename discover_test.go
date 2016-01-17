@@ -6,6 +6,8 @@ import (
 
 func TestDiscoverWithYadis(t *testing.T) {
 	// They all redirect to the same XRDS document
+	expectOpIDErr(t, "example.com/xrds",
+		"foo", identifierSelect, identifierSelect, false)
 	expectOpIDErr(t, "http://example.com/xrds",
 		"foo", identifierSelect, identifierSelect, false)
 	expectOpIDErr(t, "http://example.com/xrds-loc",

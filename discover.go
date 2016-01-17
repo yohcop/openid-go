@@ -26,6 +26,11 @@ const identifierSelect = "http://specs.openid.net/auth/2.0/identifier_select"
 
 // Same as the above public Discover function, but test-friendly.
 func discover(id string, getter httpGetter) (opEndpoint, opLocalID, claimedID string, err error) {
+	// From OpenID specs, 7.2: Normalization
+	if id, err = Normalize(id); err != nil {
+		return
+	}
+
 	// From OpenID specs, 7.3: Discovery.
 
 	// If the identifier is an XRI, [XRI_Resolution_2.0] will yield an
