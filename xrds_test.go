@@ -48,6 +48,26 @@ xmlns:openid="http://openid.net/xmlns/1.0">
     `),
 		"https://www.exampleprovider.com/endpoint/",
 		"https://exampleuser.exampleprovider.com/")
+
+	// OP Identifier Element has priority over Claimed Identifier Element
+	testExpectOpID(t, []byte(`
+<?xml version="1.0" encoding="UTF-8"?>
+<xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)"
+xmlns:openid="http://openid.net/xmlns/1.0">
+  <XRD>
+    <Service xmlns="xri://$xrd*($v*2.0)">
+      <Type>http://specs.openid.net/auth/2.0/signon</Type>
+      <URI>https://www.exampleprovider.com/endpoint-signon/</URI>
+    </Service>
+    <Service xmlns="xri://$xrd*($v*2.0)">
+      <Type>http://specs.openid.net/auth/2.0/server</Type>
+      <URI>https://www.exampleprovider.com/endpoint-server/</URI>
+    </Service>
+  </XRD>
+</xrds:XRDS>
+    `),
+		"https://www.exampleprovider.com/endpoint-server/",
+		"")
 }
 
 func testExpectOpID(t *testing.T, xrds []byte, op, id string) {
