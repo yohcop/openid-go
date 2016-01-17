@@ -29,7 +29,13 @@
         </button>
       </li>
       <li>
-        <input type="text" id="idfield">
+        <!-- 
+          OpenID 2.0 Spec point 7.1 http://openid.net/specs/openid-authentication-2_0.html#initiation
+          
+          Browser extensions or other software that support OpenID Authentication
+          can detect an OpenID input field if it has the "name" attribute set to "openid_identifier"
+        -->
+        <input type="text" id="idfield" name="openid_identifier">
         <button onclick="return setId(document.getElementById('idfield').value);">
           Go
         </button>
