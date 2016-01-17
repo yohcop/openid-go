@@ -154,7 +154,7 @@ func verifyDiscovered(uri *url.URL, vals url.Values, cache DiscoveryCache, gette
 	// Identifier in the response to make sure that the OP is authorized to
 	// make assertions about the Claimed Identifier.
 	if discovered == nil ||
-		discoveredClaimedID ==
+		discoveredLocalID ==
 			"http://specs.openid.net/auth/2.0/identifier_select" ||
 		claimedIDVerify != discoveredClaimedID {
 		if ep, lid, dci, err := discover(claimedID, getter); err == nil {
