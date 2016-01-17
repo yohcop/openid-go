@@ -23,6 +23,7 @@ func TestDefaultNonceStore(t *testing.T) {
 	accept(t, ns, "1", now30sStr+"asd")
 	reject(t, ns, "1", now30sStr+"asd") // same nonce
 	accept(t, ns, "1", now30sStr+"xxx") // different nonce
+	reject(t, ns, "1", now30sStr+"xxx") // different nonce again to verify storage of multiple nonces per endpoint
 	accept(t, ns, "2", now30sStr+"asd") // different endpoint
 
 	reject(t, ns, "1", now2mStr+"old") // too old
