@@ -66,7 +66,7 @@ func (d *SimpleNonceStore) Accept(endpoint, nonce string) error {
 
 	if nonces, hasOp := d.Store[endpoint]; hasOp {
 		// Delete old nonces while we are at it.
-		newNonces := []*Nonce{}
+		newNonces := []*Nonce{{ts, s}}
 		for _, n := range nonces {
 			if n.T == ts && n.S == s {
 				// If return early, just ignore the filtered list
