@@ -181,7 +181,7 @@ func verifyDiscovered(uri *url.URL, vals url.Values, cache DiscoveryCache, gette
 
 func verifyNonce(vals url.Values, store NonceStore) error {
 	nonce := vals.Get("openid.response_nonce")
-	endpoint := vals.Get("openid.endpoint")
+	endpoint := vals.Get("openid.op_endpoint")
 	return store.Accept(endpoint, nonce)
 }
 
