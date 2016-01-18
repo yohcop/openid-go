@@ -23,6 +23,13 @@ func TestYohcop(t *testing.T) {
 		"http://yohcop.net")
 }
 
+func TestSteam(t *testing.T) {
+	expectDiscovery(t, "http://steamcommunity.com/openid",
+		"https://steamcommunity.com/openid/login",
+		"http://specs.openid.net/auth/2.0/identifier_select",
+		"http://specs.openid.net/auth/2.0/identifier_select")
+}
+
 func expectDiscovery(t *testing.T, uri, expectOp, expectLocalId, expectClaimedId string) {
 	endpoint, localId, claimedId, err := Discover(uri)
 	if err != nil {
