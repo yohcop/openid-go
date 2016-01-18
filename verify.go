@@ -26,6 +26,12 @@ func verify(uri string, cache DiscoveryCache, getter httpGetter, nonceStore Nonc
 	// When the Relying Party receives a positive assertion, it MUST
 	// verify the following before accepting the assertion:
 
+	// - The value of "openid.signed" contains all the required fields.
+	//   (Section 10.1)
+	if err = verifySignedFields(values); err != nil {
+		return "", err
+	}
+
 	// - The value of "openid.return_to" matches the URL of the current
 	//   request (Section 11.1)
 	if err = verifyReturnTo(parsedURL, values); err != nil {
@@ -54,6 +60,32 @@ func verify(uri string, cache DiscoveryCache, getter httpGetter, nonceStore Nonc
 	// verified. If the assertion contained a Claimed Identifier, the
 	// user is now authenticated with that identifier.
 	return values.Get("openid.claimed_id"), nil
+}
+
+// 10.1. Positive Assertions
+// openid.signed - Comma-separated list of signed fields.
+// This entry consists of the fields without the "openid." prefix that the signature covers.
+// This list MUST contain at least "op_endpoint", "return_to" "response_nonce" and "assoc_handle",
+// and if present in the response, "claimed_id" and "identity".
+func verifySignedFields(vals url.Values) error {
+	ok := map[string]bool{
+		"op_endpoint":    false,
+		"return_to":      false,
+		"response_nonce": false,
+		"assoc_handle":   false,
+		"claimed_id":     vals.Get("openid.claimed_id") == "",
+		"identity":       vals.Get("openid.identity") == "",
+	}
+	signed := strings.Split(vals.Get("openid.signed"), ",")
+	for _, sf := range signed {
+		ok[sf] = true
+	}
+	for k, v := range ok {
+		if !v {
+			return fmt.Errorf("%v must be signed but isn't", k)
+		}
+	}
+	return nil
 }
 
 // 11.1.  Verifying the Return URL
