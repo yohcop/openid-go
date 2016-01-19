@@ -5,6 +5,8 @@ written in Go.
 
     go get -u github.com/yohcop/openid-go
 
+[![Build Status](https://travis-ci.org/yohcop/openid-go.svg?branch=master)](https://travis-ci.org/yohcop/openid-go)
+
 ## Github
 
 Be awesome! Feel free to clone and use according to the licence.
