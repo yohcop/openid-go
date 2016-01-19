@@ -8,7 +8,7 @@ go:
  - 1.5.2
  - 1.6beta2
 
-instal:
+install:
  - go get -d -t -v ./...
 
 # Get deps, build, test, and ensure the code is gofmt'ed.
