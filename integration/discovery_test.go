@@ -20,7 +20,7 @@ func TestYohcop(t *testing.T) {
 	expectDiscovery(t, "http://yohcop.net",
 		"https://www.google.com/accounts/o8/ud?source=profiles",
 		"http://www.google.com/profiles/yohcop",
-		"http://yohcop.net")
+		"http://yohcop.net/")
 }
 
 func TestSteam(t *testing.T) {
