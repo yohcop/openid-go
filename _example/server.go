@@ -16,7 +16,7 @@ const dataDir = "_example/"
 // the nonceStore between them.
 var nonceStore = &openid.SimpleNonceStore{
 	Store: make(map[string][]*openid.Nonce)}
-var discoveryCache = &openid.SimpleDiscoveryCache{}
+var discoveryCache = openid.NewSimpleDiscoveryCache()
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	p := make(map[string]string)
