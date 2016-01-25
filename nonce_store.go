@@ -25,11 +25,11 @@ type Nonce struct {
 
 type SimpleNonceStore struct {
 	Store map[string][]*Nonce
-	mutex sync.Mutex
+	mutex *sync.Mutex
 }
 
 func NewSimpleNonceStore() *SimpleNonceStore {
-	return &SimpleNonceStore{Store: map[string][]*Nonce{}}
+	return &SimpleNonceStore{Store: map[string][]*Nonce{}, mutex: &sync.Mutex{}}
 }
 
 func (d *SimpleNonceStore) Accept(endpoint, nonce string) error {
