@@ -24,12 +24,12 @@ type Nonce struct {
 }
 
 type SimpleNonceStore struct {
-	Store map[string][]*Nonce
+	store map[string][]*Nonce
 	mutex *sync.Mutex
 }
 
 func NewSimpleNonceStore() *SimpleNonceStore {
-	return &SimpleNonceStore{Store: map[string][]*Nonce{}, mutex: &sync.Mutex{}}
+	return &SimpleNonceStore{store: map[string][]*Nonce{}, mutex: &sync.Mutex{}}
 }
 
 func (d *SimpleNonceStore) Accept(endpoint, nonce string) error {
@@ -66,7 +66,7 @@ func (d *SimpleNonceStore) Accept(endpoint, nonce string) error {
 	d.mutex.Lock()
 	defer d.mutex.Unlock()
 
-	if nonces, hasOp := d.Store[endpoint]; hasOp {
+	if nonces, hasOp := d.store[endpoint]; hasOp {
 		// Delete old nonces while we are at it.
 		newNonces := []*Nonce{{ts, s}}
 		for _, n := range nonces {
@@ -79,9 +79,9 @@ func (d *SimpleNonceStore) Accept(endpoint, nonce string) error {
 				newNonces = append(newNonces, n)
 			}
 		}
-		d.Store[endpoint] = newNonces
+		d.store[endpoint] = newNonces
 	} else {
-		d.Store[endpoint] = []*Nonce{{ts, s}}
+		d.store[endpoint] = []*Nonce{{ts, s}}
 	}
 	return nil
 }
