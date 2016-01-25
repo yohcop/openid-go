@@ -13,8 +13,6 @@ var maxNonceAge = flag.Duration("openid-max-nonce-age",
 	"Maximum accepted age for openid nonces. The bigger, the more"+
 		"memory is needed to store used nonces.")
 
-var nonceStore = &SimpleNonceStore{Store: make(map[string][]*Nonce)}
-
 type NonceStore interface {
 	// Returns nil if accepted, an error otherwise.
 	Accept(endpoint, nonce string) error
