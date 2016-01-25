@@ -32,6 +32,11 @@ func verify(uri string, cache DiscoveryCache, getter httpGetter, nonceStore Nonc
 		return "", err
 	}
 
+	// - The signature on the assertion is valid (Section 11.4)
+	if err = verifySignature(uri, values, getter); err != nil {
+		return "", err
+	}
+
 	// - The value of "openid.return_to" matches the URL of the current
 	//   request (Section 11.1)
 	if err = verifyReturnTo(parsedURL, values); err != nil {
@@ -47,12 +52,6 @@ func verify(uri string, cache DiscoveryCache, getter httpGetter, nonceStore Nonc
 	// - An assertion has not yet been accepted from this OP with the
 	//   same value for "openid.response_nonce" (Section 11.3)
 	if err = verifyNonce(values, nonceStore); err != nil {
-		return "", err
-	}
-
-	// - The signature on the assertion is valid and all fields that are
-	//   required to be signed are signed (Section 11.4)
-	if err = verifySignature(uri, values, getter); err != nil {
 		return "", err
 	}
 
