@@ -8,7 +8,7 @@ import (
 
 func TestVerifyNonce(t *testing.T) {
 	timeStr := time.Now().UTC().Format(time.RFC3339)
-	ns := &SimpleNonceStore{Store: make(map[string][]*Nonce)}
+	ns := NewSimpleNonceStore()
 	v := url.Values{}
 
 	// Initial values

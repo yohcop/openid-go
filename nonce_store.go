@@ -30,6 +30,10 @@ type SimpleNonceStore struct {
 	mutex sync.Mutex
 }
 
+func NewSimpleNonceStore() *SimpleNonceStore {
+	return &SimpleNonceStore{Store: map[string][]*Nonce{}}
+}
+
 func (d *SimpleNonceStore) Accept(endpoint, nonce string) error {
 	// Value: A string 255 characters or less in length, that MUST be
 	// unique to this particular successful authentication response.
