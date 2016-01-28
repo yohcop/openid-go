@@ -13,8 +13,6 @@ var maxNonceAge = flag.Duration("openid-max-nonce-age",
 	"Maximum accepted age for openid nonces. The bigger, the more"+
 		"memory is needed to store used nonces.")
 
-var nonceStore = &SimpleNonceStore{Store: make(map[string][]*Nonce)}
-
 type NonceStore interface {
 	// Returns nil if accepted, an error otherwise.
 	Accept(endpoint, nonce string) error
@@ -26,8 +24,12 @@ type Nonce struct {
 }
 
 type SimpleNonceStore struct {
-	Store map[string][]*Nonce
-	mutex sync.Mutex
+	store map[string][]*Nonce
+	mutex *sync.Mutex
+}
+
+func NewSimpleNonceStore() *SimpleNonceStore {
+	return &SimpleNonceStore{store: map[string][]*Nonce{}, mutex: &sync.Mutex{}}
 }
 
 func (d *SimpleNonceStore) Accept(endpoint, nonce string) error {
@@ -64,7 +66,7 @@ func (d *SimpleNonceStore) Accept(endpoint, nonce string) error {
 	d.mutex.Lock()
 	defer d.mutex.Unlock()
 
-	if nonces, hasOp := d.Store[endpoint]; hasOp {
+	if nonces, hasOp := d.store[endpoint]; hasOp {
 		// Delete old nonces while we are at it.
 		newNonces := []*Nonce{{ts, s}}
 		for _, n := range nonces {
@@ -77,9 +79,9 @@ func (d *SimpleNonceStore) Accept(endpoint, nonce string) error {
 				newNonces = append(newNonces, n)
 			}
 		}
-		d.Store[endpoint] = newNonces
+		d.store[endpoint] = newNonces
 	} else {
-		d.Store[endpoint] = []*Nonce{{ts, s}}
+		d.store[endpoint] = []*Nonce{{ts, s}}
 	}
 	return nil
 }
