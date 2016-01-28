@@ -1,5 +1,9 @@
 package openid
 
+import (
+	"sync"
+)
+
 type DiscoveredInfo interface {
 	OpEndpoint() string
 	OpLocalID() string
@@ -31,14 +35,27 @@ func (s *SimpleDiscoveredInfo) ClaimedID() string {
 	return s.claimedID
 }
 
-type SimpleDiscoveryCache map[string]DiscoveredInfo
-
-func (s SimpleDiscoveryCache) Put(id string, info DiscoveredInfo) {
-	s[id] = info
+type SimpleDiscoveryCache struct {
+	cache map[string]DiscoveredInfo
+	mutex *sync.Mutex
 }
 
-func (s SimpleDiscoveryCache) Get(id string) DiscoveredInfo {
-	if info, has := s[id]; has {
+func NewSimpleDiscoveryCache() *SimpleDiscoveryCache {
+	return &SimpleDiscoveryCache{cache: map[string]DiscoveredInfo{}, mutex: &sync.Mutex{}}
+}
+
+func (s *SimpleDiscoveryCache) Put(id string, info DiscoveredInfo) {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
+	s.cache[id] = info
+}
+
+func (s *SimpleDiscoveryCache) Get(id string) DiscoveredInfo {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
+	if info, has := s.cache[id]; has {
 		return info
 	}
 	return nil
