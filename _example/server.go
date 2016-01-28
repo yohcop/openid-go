@@ -15,7 +15,7 @@ const dataDir = "_example/"
 // If you have multiple servers for example, you may need to share at least
 // the nonceStore between them.
 var nonceStore = openid.NewSimpleNonceStore()
-var discoveryCache = &openid.SimpleDiscoveryCache{}
+var discoveryCache = openid.NewSimpleDiscoveryCache()
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	p := make(map[string]string)
