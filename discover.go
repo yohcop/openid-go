@@ -22,8 +22,6 @@ func Discover(id string) (opEndpoint, opLocalID, claimedID string, err error) {
 	return discover(id, urlGetter)
 }
 
-const identifierSelect = "http://specs.openid.net/auth/2.0/identifier_select"
-
 // Same as the above public Discover function, but test-friendly.
 func discover(id string, getter httpGetter) (opEndpoint, opLocalID, claimedID string, err error) {
 	// From OpenID specs, 7.2: Normalization
@@ -55,11 +53,6 @@ func discover(id string, getter httpGetter) (opEndpoint, opLocalID, claimedID st
 
 	if err != nil {
 		return "", "", "", err
-	}
-
-	if claimedID == "" {
-		claimedID = identifierSelect
-		opLocalID = identifierSelect
 	}
 	return
 }
