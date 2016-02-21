@@ -22,12 +22,22 @@ func TestBuildRedirectUrl(t *testing.T) {
 			"&openid.return_to=returnTo"+
 			"&openid.claimed_id=claimedId"+
 			"&openid.identity=opLocalId")
+	// No realm, no localId
+	expectURL(t, "https://endpoint/a", "", "claimedId", "returnTo", "",
+		"https://endpoint/a?"+
+			"openid.ns=http://specs.openid.net/auth/2.0"+
+			"&openid.mode=checkid_setup"+
+			"&openid.return_to=returnTo"+
+			"&openid.claimed_id=claimedId"+
+			"&openid.identity=claimedId")
 	// No realm, no claimedId
 	expectURL(t, "https://endpoint/a", "opLocalId", "", "returnTo", "",
 		"https://endpoint/a?"+
 			"openid.ns=http://specs.openid.net/auth/2.0"+
 			"&openid.mode=checkid_setup"+
 			"&openid.return_to=returnTo"+
+			"&openid.claimed_id="+
+			"http://specs.openid.net/auth/2.0/identifier_select"+
 			"&openid.identity="+
 			"http://specs.openid.net/auth/2.0/identifier_select")
 }
