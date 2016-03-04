@@ -164,17 +164,16 @@ func verifyDiscovered(uri *url.URL, vals url.Values, cache DiscoveryCache, gette
 		claimedIDVerify = claimedID[0:fragmentIndex]
 	}
 
-	discovered := cache.Get(endpoint)
-	discoveredClaimedID := ""
-	discoveredLocalID := ""
-	if discovered != nil {
-		// If the Claimed Identifier is included in the assertion, it
-		// MUST have been discovered by the Relying Party and the
-		// information in the assertion MUST be present in the
-		// discovered information. The Claimed Identifier MUST NOT be an
-		// OP Identifier.
-		discoveredClaimedID = discovered.ClaimedID()
-		discoveredLocalID = discovered.OpLocalID()
+	// If the Claimed Identifier is included in the assertion, it
+	// MUST have been discovered by the Relying Party and the
+	// information in the assertion MUST be present in the
+	// discovered information. The Claimed Identifier MUST NOT be an
+	// OP Identifier.
+	if discovered := cache.Get(claimedIDVerify); discovered != nil &&
+		discovered.OpEndpoint() == endpoint &&
+		discovered.OpLocalID() == localID &&
+		discovered.ClaimedID() == claimedIDVerify {
+		return nil
 	}
 
 	// If the Claimed Identifier was not previously discovered by the
@@ -184,30 +183,18 @@ func verifyDiscovered(uri *url.URL, vals url.Values, cache DiscoveryCache, gette
 	// assertion), the Relying Party MUST perform discovery on the Claimed
 	// Identifier in the response to make sure that the OP is authorized to
 	// make assertions about the Claimed Identifier.
-	if discovered == nil ||
-		discoveredLocalID ==
-			"http://specs.openid.net/auth/2.0/identifier_select" ||
-		claimedIDVerify != discoveredClaimedID {
-		if ep, lid, dci, err := discover(claimedID, getter); err == nil {
-			discoveredClaimedID = dci
-			discoveredLocalID = lid
-
-			if ep == endpoint {
-				// This claimed ID points to the same endpoint, therefore this
-				// endpoint is authorized to make assertions about that claimed ID.
-				// TODO: There may be multiple undpoints found during discovery.
-				// They should all be checked.
-				return nil
-			}
+	if ep, _, _, err := discover(claimedID, getter); err == nil {
+		if ep == endpoint {
+			// This claimed ID points to the same endpoint, therefore this
+			// endpoint is authorized to make assertions about that claimed ID.
+			// TODO: There may be multiple endpoints found during discovery.
+			// They should all be checked.
+			cache.Put(claimedIDVerify, &SimpleDiscoveredInfo{opEndpoint: endpoint, opLocalID: localID, claimedID: claimedIDVerify})
+			return nil
 		}
-		return errors.New("Could not verify that the claimed ID")
 	}
 
-	// we know here that claimedIdVerify == discoveredClaimedId.
-	if localID != discoveredLocalID {
-		return errors.New("Discovered local ID does not match identity")
-	}
-	return nil
+	return errors.New("Could not verify the claimed ID")
 }
 
 func verifyNonce(vals url.Values, store NonceStore) error {

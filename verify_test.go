@@ -92,3 +92,44 @@ func doVerifySignedFields(t *testing.T, v url.Values, succeed bool) {
 		t.Errorf("verifySignedFields failed unexpectedly: %v - %v", v, err)
 	}
 }
+
+func TestVerifyDiscovered(t *testing.T) {
+	dc := NewSimpleDiscoveryCache()
+	vals := url.Values{"openid.ns": []string{"http://specs.openid.net/auth/2.0"},
+		"openid.mode":        []string{"id_res"},
+		"openid.op_endpoint": []string{"http://example.com/openid/login"},
+		"openid.claimed_id":  []string{"http://example.com/openid/id/foo"},
+		"openid.identity":    []string{"http://example.com/openid/id/foo"}}
+
+	// Make sure we fail with no discovery handler
+	if err := verifyDiscovered(nil, vals, dc, testGetter); err == nil {
+		t.Errorf("verifyDiscovered succeeded unexpectedly with no discovery")
+	}
+
+	// Add the discovery handler
+	testGetter.urls["http://example.com/openid/id/foo#Accept#application/xrds+xml"] = `HTTP/1.0 200 OK
+Content-Type: application/xrds+xml; charset=UTF-8
+
+<?xml version="1.0" encoding="UTF-8"?>
+<xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)">
+	<XRD>
+		<Service priority="0">
+			<Type>http://specs.openid.net/auth/2.0/signon</Type>		
+			<URI>http://example.com/openid/login</URI>
+		</Service>
+	</XRD>
+</xrds:XRDS>`
+
+	// Make sure we succeed now
+	if err := verifyDiscovered(nil, vals, dc, testGetter); err != nil {
+		t.Errorf("verifyDiscovered failed unexpectedly: %v", err)
+	}
+
+	// Remove the discovery handler
+	delete(testGetter.urls, "http://example.com/openid/id/foo#Accept#application/xrds+xml")
+
+	// Make sure we still succeed thanks to the discovery cache
+	if err := verifyDiscovered(nil, vals, dc, testGetter); err != nil {
+		t.Errorf("verifyDiscovered failed unexpectedly: %v", err)
+	}
+}
