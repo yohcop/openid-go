@@ -12,8 +12,8 @@ import (
 func TestYahoo(t *testing.T) {
 	expectDiscovery(t, "https://me.yahoo.com",
 		"https://open.login.yahooapis.com/openid/op/auth",
-		"http://specs.openid.net/auth/2.0/identifier_select",
-		"http://specs.openid.net/auth/2.0/identifier_select")
+		"",
+		"")
 }
 
 func TestYohcop(t *testing.T) {
@@ -26,8 +26,8 @@ func TestYohcop(t *testing.T) {
 func TestSteam(t *testing.T) {
 	expectDiscovery(t, "http://steamcommunity.com/openid",
 		"https://steamcommunity.com/openid/login",
-		"http://specs.openid.net/auth/2.0/identifier_select",
-		"http://specs.openid.net/auth/2.0/identifier_select")
+		"",
+		"")
 }
 
 func expectDiscovery(t *testing.T, uri, expectOp, expectLocalId, expectClaimedId string) {
