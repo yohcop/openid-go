@@ -9,7 +9,11 @@ import (
 )
 
 func Verify(uri string, cache DiscoveryCache, nonceStore NonceStore) (id string, err error) {
-	return verify(uri, cache, urlGetter, nonceStore)
+	return defaultInstance.Verify(uri, cache, nonceStore)
+}
+
+func (oid *OpenID) Verify(uri string, cache DiscoveryCache, nonceStore NonceStore) (id string, err error) {
+	return verify(uri, cache, oid.urlGetter, nonceStore)
 }
 
 func verify(uri string, cache DiscoveryCache, getter httpGetter, nonceStore NonceStore) (id string, err error) {

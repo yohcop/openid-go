@@ -19,7 +19,11 @@ package openid
 // used as both the Claimed Identifier and the OP-Local Identifier
 // when an OP Identifier is entered.
 func Discover(id string) (opEndpoint, opLocalID, claimedID string, err error) {
-	return discover(id, urlGetter)
+	return defaultInstance.Discover(id)
+}
+
+func (oid *OpenID) Discover(id string) (opEndpoint, opLocalID, claimedID string, err error) {
+	return discover(id, oid.urlGetter)
 }
 
 // Same as the above public Discover function, but test-friendly.

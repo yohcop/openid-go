@@ -11,11 +11,11 @@ type httpGetter interface {
 	Post(uri string, form url.Values) (resp *http.Response, err error)
 }
 
-type defaultGetter struct{}
+type defaultGetter struct {
+	client *http.Client
+}
 
-var urlGetter = &defaultGetter{}
-
-func (*defaultGetter) Get(uri string, headers map[string]string) (resp *http.Response, err error) {
+func (dg *defaultGetter) Get(uri string, headers map[string]string) (resp *http.Response, err error) {
 	request, err := http.NewRequest("GET", uri, nil)
 	if err != nil {
 		return
@@ -23,10 +23,9 @@ func (*defaultGetter) Get(uri string, headers map[string]string) (resp *http.Res
 	for h, v := range headers {
 		request.Header.Add(h, v)
 	}
-	client := &http.Client{}
-	return client.Do(request)
+	return dg.client.Do(request)
 }
 
-func (*defaultGetter) Post(uri string, form url.Values) (resp *http.Response, err error) {
-	return http.PostForm(uri, form)
+func (dg *defaultGetter) Post(uri string, form url.Values) (resp *http.Response, err error) {
+	return dg.client.PostForm(uri, form)
 }
