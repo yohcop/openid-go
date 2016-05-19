@@ -14,10 +14,10 @@ func redirectURL(id, callbackURL, realm string, getter httpGetter) (string, erro
 	if err != nil {
 		return "", err
 	}
-	return buildRedirectURL(opEndpoint, opLocalID, claimedID, callbackURL, realm)
+	return BuildRedirectURL(opEndpoint, opLocalID, claimedID, callbackURL, realm)
 }
 
-func buildRedirectURL(opEndpoint, opLocalID, claimedID, returnTo, realm string) (string, error) {
+func BuildRedirectURL(opEndpoint, opLocalID, claimedID, returnTo, realm string) (string, error) {
 	values := make(url.Values)
 	values.Add("openid.ns", "http://specs.openid.net/auth/2.0")
 	values.Add("openid.mode", "checkid_setup")
