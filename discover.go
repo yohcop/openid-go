@@ -23,11 +23,6 @@ func Discover(id string) (opEndpoint, opLocalID, claimedID string, err error) {
 }
 
 func (oid *OpenID) Discover(id string) (opEndpoint, opLocalID, claimedID string, err error) {
-	return discover(id, oid.urlGetter)
-}
-
-// Same as the above public Discover function, but test-friendly.
-func discover(id string, getter httpGetter) (opEndpoint, opLocalID, claimedID string, err error) {
 	// From OpenID specs, 7.2: Normalization
 	if id, err = Normalize(id); err != nil {
 		return
@@ -47,12 +42,12 @@ func discover(id string, getter httpGetter) (opEndpoint, opLocalID, claimedID st
 	// If it is a URL, the Yadis protocol [Yadis] SHALL be first
 	// attempted. If it succeeds, the result is again an XRDS
 	// document.
-	if opEndpoint, opLocalID, err = yadisDiscovery(id, getter); err != nil {
+	if opEndpoint, opLocalID, err = yadisDiscovery(id, oid.urlGetter); err != nil {
 		// If the Yadis protocol fails and no valid XRDS document is
 		// retrieved, or no Service Elements are found in the XRDS
 		// document, the URL is retrieved and HTML-Based discovery SHALL be
 		// attempted.
-		opEndpoint, opLocalID, claimedID, err = htmlDiscovery(id, getter)
+		opEndpoint, opLocalID, claimedID, err = htmlDiscovery(id, oid.urlGetter)
 	}
 
 	if err != nil {

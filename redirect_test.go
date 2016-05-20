@@ -70,7 +70,7 @@ func TestRedirectWithDiscovery(t *testing.T) {
 }
 
 func expectRedirect(t *testing.T, uri, callback, realm, exRedirect string, exErr bool) {
-	redirect, err := redirectURL(uri, callback, realm, testGetter)
+	redirect, err := testInstance.RedirectURL(uri, callback, realm)
 	if (err != nil) != exErr {
 		t.Errorf("Unexpected error: '%s'", err)
 		return
