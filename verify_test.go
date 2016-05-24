@@ -102,7 +102,7 @@ func TestVerifyDiscovered(t *testing.T) {
 		"openid.identity":    []string{"http://example.com/openid/id/foo"}}
 
 	// Make sure we fail with no discovery handler
-	if err := verifyDiscovered(nil, vals, dc, testGetter); err == nil {
+	if err := testInstance.verifyDiscovered(nil, vals, dc); err == nil {
 		t.Errorf("verifyDiscovered succeeded unexpectedly with no discovery")
 	}
 
@@ -121,7 +121,7 @@ Content-Type: application/xrds+xml; charset=UTF-8
 </xrds:XRDS>`
 
 	// Make sure we succeed now
-	if err := verifyDiscovered(nil, vals, dc, testGetter); err != nil {
+	if err := testInstance.verifyDiscovered(nil, vals, dc); err != nil {
 		t.Errorf("verifyDiscovered failed unexpectedly: %v", err)
 	}
 
@@ -129,7 +129,7 @@ Content-Type: application/xrds+xml; charset=UTF-8
 	delete(testGetter.urls, "http://example.com/openid/id/foo#Accept#application/xrds+xml")
 
 	// Make sure we still succeed thanks to the discovery cache
-	if err := verifyDiscovered(nil, vals, dc, testGetter); err != nil {
+	if err := testInstance.verifyDiscovered(nil, vals, dc); err != nil {
 		t.Errorf("verifyDiscovered failed unexpectedly: %v", err)
 	}
 }

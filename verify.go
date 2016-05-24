@@ -9,10 +9,10 @@ import (
 )
 
 func Verify(uri string, cache DiscoveryCache, nonceStore NonceStore) (id string, err error) {
-	return verify(uri, cache, urlGetter, nonceStore)
+	return defaultInstance.Verify(uri, cache, nonceStore)
 }
 
-func verify(uri string, cache DiscoveryCache, getter httpGetter, nonceStore NonceStore) (id string, err error) {
+func (oid *OpenID) Verify(uri string, cache DiscoveryCache, nonceStore NonceStore) (id string, err error) {
 	parsedURL, err := url.Parse(uri)
 	if err != nil {
 		return "", err
@@ -33,7 +33,7 @@ func verify(uri string, cache DiscoveryCache, getter httpGetter, nonceStore Nonc
 	}
 
 	// - The signature on the assertion is valid (Section 11.4)
-	if err = verifySignature(uri, values, getter); err != nil {
+	if err = verifySignature(uri, values, oid.urlGetter); err != nil {
 		return "", err
 	}
 
@@ -45,7 +45,7 @@ func verify(uri string, cache DiscoveryCache, getter httpGetter, nonceStore Nonc
 
 	// - Discovered information matches the information in the assertion
 	//   (Section 11.2)
-	if err = verifyDiscovered(parsedURL, values, cache, getter); err != nil {
+	if err = oid.verifyDiscovered(parsedURL, values, cache); err != nil {
 		return "", err
 	}
 
@@ -127,7 +127,7 @@ func compareQueryParams(q1, q2 url.Values) error {
 	return nil
 }
 
-func verifyDiscovered(uri *url.URL, vals url.Values, cache DiscoveryCache, getter httpGetter) error {
+func (oid *OpenID) verifyDiscovered(uri *url.URL, vals url.Values, cache DiscoveryCache) error {
 	version := vals.Get("openid.ns")
 	if version != "http://specs.openid.net/auth/2.0" {
 		return errors.New("Bad protocol version")
@@ -183,7 +183,7 @@ func verifyDiscovered(uri *url.URL, vals url.Values, cache DiscoveryCache, gette
 	// assertion), the Relying Party MUST perform discovery on the Claimed
 	// Identifier in the response to make sure that the OP is authorized to
 	// make assertions about the Claimed Identifier.
-	if ep, _, _, err := discover(claimedID, getter); err == nil {
+	if ep, _, _, err := oid.Discover(claimedID); err == nil {
 		if ep == endpoint {
 			// This claimed ID points to the same endpoint, therefore this
 			// endpoint is authorized to make assertions about that claimed ID.

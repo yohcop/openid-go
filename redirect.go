@@ -6,11 +6,11 @@ import (
 )
 
 func RedirectURL(id, callbackURL, realm string) (string, error) {
-	return redirectURL(id, callbackURL, realm, urlGetter)
+	return defaultInstance.RedirectURL(id, callbackURL, realm)
 }
 
-func redirectURL(id, callbackURL, realm string, getter httpGetter) (string, error) {
-	opEndpoint, opLocalID, claimedID, err := discover(id, getter)
+func (oid *OpenID) RedirectURL(id, callbackURL, realm string) (string, error) {
+	opEndpoint, opLocalID, claimedID, err := oid.Discover(id)
 	if err != nil {
 		return "", err
 	}

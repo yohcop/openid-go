@@ -23,6 +23,16 @@ directory, like so:
 
     go run _example/server.go
 
+## App Engine
+
+In order to use this on Google App Engine, you need to create an instance with a custom `*http.Client` provided by [urlfetch](https://cloud.google.com/appengine/docs/go/urlfetch/).
+
+```go
+oid := openid.NewOpenID(urlfetch.Client(appengine.NewContext(r)))
+oid.RedirectURL(...)
+oid.Verify(...)
+```
+
 ## License
 
 Distributed under the [Apache v2.0 license](http://www.apache.org/licenses/LICENSE-2.0.html).

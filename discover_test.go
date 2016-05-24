@@ -33,7 +33,7 @@ func TestDiscoverBadUrl(t *testing.T) {
 }
 
 func expectOpIDErr(t *testing.T, uri, exOpEndpoint, exOpLocalID, exClaimedID string, exErr bool) {
-	opEndpoint, opLocalID, claimedID, err := discover(uri, testGetter)
+	opEndpoint, opLocalID, claimedID, err := testInstance.Discover(uri)
 	if (err != nil) != exErr {
 		t.Errorf("Unexpected error: '%s'", err)
 	} else {

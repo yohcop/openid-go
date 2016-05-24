@@ -16,6 +16,8 @@ type fakeGetter struct {
 var testGetter = &fakeGetter{
 	make(map[string]string), make(map[string]string)}
 
+var testInstance = &OpenID{urlGetter: testGetter}
+
 func (f *fakeGetter) Get(uri string, headers map[string]string) (resp *http.Response, err error) {
 	key := uri
 	for k, v := range headers {
