@@ -19,6 +19,15 @@ func TestFindEndpointFromLink(t *testing.T) {
         </head>
       </html>
       `, "foo.com", "bar-name", false)
+	// Self-closing link
+	searchLink(t, `
+      <html>
+        <head>
+          <link rel="openid2.provider" href="selfclose.com" />
+          <link rel="openid2.local_id" href="selfclose-name" />
+        </head>
+      </html>
+      `, "selfclose.com", "selfclose-name", false)
 }
 
 func TestNoEndpointFromLink(t *testing.T) {

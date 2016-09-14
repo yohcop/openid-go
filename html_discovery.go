@@ -30,7 +30,7 @@ func findProviderFromHeadLink(input io.Reader) (opEndpoint, opLocalID string, er
 				return
 			}
 			return "", "", tokenizer.Err()
-		case html.StartTagToken, html.EndTagToken:
+		case html.StartTagToken, html.EndTagToken, html.SelfClosingTagToken:
 			tk := tokenizer.Token()
 			if tk.Data == "head" {
 				if tt == html.StartTagToken {
