@@ -13,6 +13,7 @@ func TestNormalize(t *testing.T) {
 	doNormalize(t, "http://example.com/user/", "http://example.com/user/", true)
 	doNormalize(t, "http://example.com/", "http://example.com/", true)
 	doNormalize(t, "=example", "=example", false)       // XRI not supported
+	doNormalize(t, "(=example)", "(=example)", false)   // XRI not supported
 	doNormalize(t, "xri://=example", "=example", false) // XRI not supported
 
 	// Empty
