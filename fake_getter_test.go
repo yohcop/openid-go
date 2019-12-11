@@ -99,5 +99,4 @@ Content-Type: text/html
 <link rel="openid2.local_id openid.delegate"
       href="http://exampleuser.livejournal.com/">`
 
-
 }
