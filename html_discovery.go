@@ -3,6 +3,7 @@ package openid
 import (
 	"errors"
 	"io"
+	"strings"
 
 	"golang.org/x/net/html"
 )
@@ -48,10 +49,18 @@ func findProviderFromHeadLink(input io.Reader) (opEndpoint, opLocalID string, er
 				href := ""
 				for _, attr := range tk.Attr {
 					if attr.Key == "rel" {
-						if attr.Val == "openid2.provider" {
-							provider = true
-						} else if attr.Val == "openid2.local_id" {
-							localID = true
+						// There could be multiple values in the rel= attribute,
+						// space-separated (it seems to be for OpenID1 vs 2.)
+						// See example in Appendix A.4.  HTML Identifier Markup.
+						vals := strings.Split(attr.Val, " ")
+						for _, val := range vals {
+							if val == "openid2.provider" {
+								provider = true
+								break
+							} else if val == "openid2.local_id" {
+								localID = true
+								break
+							}
 						}
 					} else if attr.Key == "href" {
 						href = attr.Val

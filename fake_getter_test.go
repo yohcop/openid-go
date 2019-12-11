@@ -88,4 +88,16 @@ Content-Type: text/html
 <link rel="openid2.local_id" href="bar-name">`
 
 	testGetter.redirects["http://example.com/html-redirect"] = "http://example.com/html"
+
+	testGetter.urls["http://example.com/html-multi-rel"] = `HTTP/1.0 200 OK
+Content-Type: text/html
+
+<html>
+<head>
+<link rel="openid2.provider openid.server"
+	  href="http://www.livejournal.com/openid/server.bml">
+<link rel="openid2.local_id openid.delegate"
+      href="http://exampleuser.livejournal.com/">`
+
+
 }

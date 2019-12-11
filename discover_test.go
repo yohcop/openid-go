@@ -26,6 +26,12 @@ func TestDiscoverWithHtml(t *testing.T) {
 	expectOpIDErr(t, "http://example.com/html-redirect",
 		"example.com/openid", "bar-name", "http://example.com/html",
 		false)
+
+	expectOpIDErr(t, "http://example.com/html-multi-rel",
+		"http://www.livejournal.com/openid/server.bml",
+		"http://exampleuser.livejournal.com/",
+		"http://example.com/html-multi-rel",
+		false)
 }
 
 func TestDiscoverBadUrl(t *testing.T) {
