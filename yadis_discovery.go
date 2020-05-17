@@ -90,7 +90,7 @@ func findMetaXrdsLocation(input io.Reader) (location string, err error) {
 		switch tt {
 		case html.ErrorToken:
 			return "", tokenizer.Err()
-		case html.StartTagToken, html.EndTagToken:
+		case html.StartTagToken, html.EndTagToken, html.SelfClosingTagToken:
 			tk := tokenizer.Token()
 			if tk.Data == "head" {
 				if tt == html.StartTagToken {
